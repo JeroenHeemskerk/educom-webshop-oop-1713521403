@@ -28,9 +28,9 @@ classDiagram
         <<abstract>>
        +show()
        -showHtmlStart()
-       -showHeaderStart()
-       #showHeaderContent()
-       -showHeaderEnd()
+       -showHeadStart()
+       #showHeadContent()
+       -showHeadEnd()
        -showBodyStart()
        #showBodyContent()
        -showBodyEnd()
@@ -39,26 +39,26 @@ classDiagram
     class BasicDoc{
         #data 
         +__construct(mydata)
-        #showHeaderContent()
+        #showHeadContent()
         -showTitle()
         -showCssLinks()
         #showBodyContent()
-        #showHeader()
+        #showHead()
         -showMenu()
         -showGeneralError()
         #showContent()
         -showFooter()
     }
     class HomeDoc{
-        #showHeader()
+        #showHead()
         #showContent()
     }
     class AboutDoc{
-        #showHeader()
+        #showHead()
         #showContent()
     }
     class Error404Doc{
-        #showHeader()
+        #showHead()
         #showContent()
     }
     class FormDoc{
@@ -69,19 +69,19 @@ classDiagram
         #showError()
     }
     class ContactDoc{
-        #showHeader()
+        #showHead()
         #showContent()
     }
     class LoginDoc{
-        #showHeader()
+        #showHead()
         #showContent()
     }
     class RegisterDoc{
-        #showHeader()
+        #showHead()
         #showContent()
     }
     class AccountDoc {
-        #showHeader()
+        #showHead()
         #showContent()
     }
     class ProductDoc{
@@ -89,19 +89,19 @@ classDiagram
         #showActionButton() 
     }
     class ShopDoc{
-        #showHeader()
+        #showHead()
         #showContent()
     }
     class DetailDoc{
-        #showHeader()
+        #showHead()
         #showContent()
     }
     class CartDoc{
-        #showHeader()
+        #showHead()
         #showContent()
     }
     class Top5Doc{
-        #showHeader()
+        #showHead()
         #showContent()
     }
 
