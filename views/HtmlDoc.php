@@ -11,11 +11,7 @@ class HtmlDoc {
 
     // ik vermoed dat deze class abstract moet worden
     protected function showHeadContent() {
-        // TODO: make title dependent on what page is shown
-        echo "<title>Florian's Rariteitenkabinet</title>";   
-        echo '<link rel="icon" type="svg" href="../Images/online-form-icon.svg">';
-        echo '<link rel="stylesheet" type="text/css" href="CSS/styles.css">';
-        echo '<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Merriweather|Open+Sans">';
+        echo "";
     } 
 
     private function showHeadEnd() {

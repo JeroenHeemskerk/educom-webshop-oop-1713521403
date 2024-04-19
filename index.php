@@ -132,7 +132,6 @@ function processPage($page) {
                 }
             }
             else {
-                // TODO: catch SQL fout
                 try {
                     $data = getProductsByIDs([$productId]);
                     $data["productId"] = $productId;
