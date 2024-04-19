@@ -9,17 +9,28 @@ classDiagram
 
     BasicDoc <|-- HomeDoc
     BasicDoc <|-- AboutDoc
+    BasicDoc <|-- Error404Doc
     BasicDoc <|-- FormDoc
+    BasicDoc <|-- ProductDoc
 
     FormDoc <|-- ContactDoc
     FormDoc <|-- LoginDoc
+    FormDoc <|-- RegisterDoc
+    FormDoc <|-- AccountDoc
+
+    ProductDoc <|-- ShopDoc
+    ProductDoc <|-- CartDoc
+    ProductDoc <|-- DetailDoc
+    ProductDoc <|-- Top5Doc
+    
 
     class HtmlDoc{
+        <<abstract>>
        +show()
        -showHtmlStart()
-       -showHeaderStart()
-       #showHeaderContent()
-       -showHeaderEnd()
+       -showHeadStart()
+       #showHeadContent()
+       -showHeadEnd()
        -showBodyStart()
        #showBodyContent()
        -showBodyEnd()
@@ -28,33 +39,71 @@ classDiagram
     class BasicDoc{
         #data 
         +__construct(mydata)
-        #showHeaderContent()
+        #showHeadContent()
         -showTitle()
         -showCssLinks()
         #showBodyContent()
-        #showHeader()
+        #showHead()
         -showMenu()
+        -showGeneralError()
         #showContent()
         -showFooter()
     }
     class HomeDoc{
-        #showHeader()
+        #showHead()
         #showContent()
     }
     class AboutDoc{
-        #showHeader()
+        #showHead()
+        #showContent()
+    }
+    class Error404Doc{
+        #showHead()
         #showContent()
     }
     class FormDoc{
         <<abstract>>
+        #showFormStart()
+        #showFormField()
+        #showFormEnd()
+        #showError()
     }
     class ContactDoc{
-        #showHeader()
+        #showHead()
         #showContent()
     }
     class LoginDoc{
-        #showHeader()
+        #showHead()
         #showContent()
     }
+    class RegisterDoc{
+        #showHead()
+        #showContent()
+    }
+    class AccountDoc {
+        #showHead()
+        #showContent()
+    }
+    class ProductDoc{
+        <<abstract>>
+        #showActionButton() 
+    }
+    class ShopDoc{
+        #showHead()
+        #showContent()
+    }
+    class DetailDoc{
+        #showHead()
+        #showContent()
+    }
+    class CartDoc{
+        #showHead()
+        #showContent()
+    }
+    class Top5Doc{
+        #showHead()
+        #showContent()
+    }
+
 
 ```
