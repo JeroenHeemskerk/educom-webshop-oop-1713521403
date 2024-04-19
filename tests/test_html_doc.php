@@ -1,8 +1,8 @@
 <?php
-  include_once "../views/BasicDoc.php";
+  include_once "../views/HtmlDoc.php";
 
-  $data = array ( 'page' => 'shop', 'menu' => ["home"=>"HOME", "about"=>"ABOUT", "contact"=>"CONTACT"] );
+  $data = array ( 'page' => 'shop', "title"=>"Shop", 'menu' => ["home"=>"HOME", "about"=>"ABOUT", "contact"=>"CONTACT"] );
 
-  $view = new BasicDoc($data);
+  $view = new HtmlDoc();
   $view  -> show();
 ?>
