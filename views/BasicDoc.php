@@ -12,7 +12,6 @@ class BasicDoc extends HtmlDoc {
         $this->showTitle();
         $this->showFavIcon();
         $this->showStyleLinks();
-
     }
 
     private function showFavIcon() {
@@ -27,38 +26,7 @@ class BasicDoc extends HtmlDoc {
     
     private function showTitle() {
         echo "<title>";
-        $page = $this->data["page"];
-        // TODO: change to associative array?
-        switch ($page) {
-            case "contact":
-            case "thanks":
-                echo "Contact";
-                break;
-            case "about":
-                echo "About";
-                break;
-            case "home":
-                echo "Home";
-                break;
-            case "register":
-                echo "Register";
-                break;
-            case "login":
-                echo "Login";
-                break;
-            case "shop":
-                echo "Shop";
-                break;
-            case "cart":
-                echo "Cart";
-                break;
-            case "changepswd":
-                echo "Account";
-                break;
-    
-            default:
-                echo "Oh oh... Error 404";
-        }
+        echo $this->data["title"];
         echo "</title>";  
     }
 
