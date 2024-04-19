@@ -43,22 +43,18 @@ classDiagram
         -showTitle()
         -showCssLinks()
         #showBodyContent()
-        #showHead()
         -showMenu()
         -showGeneralError()
         #showContent()
         -showFooter()
     }
     class HomeDoc{
-        #showHead()
         #showContent()
     }
     class AboutDoc{
-        #showHead()
         #showContent()
     }
     class Error404Doc{
-        #showHead()
         #showContent()
     }
     class FormDoc{
@@ -69,19 +65,15 @@ classDiagram
         #showError()
     }
     class ContactDoc{
-        #showHead()
         #showContent()
     }
     class LoginDoc{
-        #showHead()
         #showContent()
     }
     class RegisterDoc{
-        #showHead()
         #showContent()
     }
     class AccountDoc {
-        #showHead()
         #showContent()
     }
     class ProductDoc{
@@ -89,19 +81,15 @@ classDiagram
         #showActionButton() 
     }
     class ShopDoc{
-        #showHead()
         #showContent()
     }
     class DetailDoc{
-        #showHead()
         #showContent()
     }
     class CartDoc{
-        #showHead()
         #showContent()
     }
     class Top5Doc{
-        #showHead()
         #showContent()
     }
 
