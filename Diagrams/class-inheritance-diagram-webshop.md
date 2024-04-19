@@ -9,12 +9,23 @@ classDiagram
 
     BasicDoc <|-- HomeDoc
     BasicDoc <|-- AboutDoc
+    BasicDoc <|-- Error404Doc
     BasicDoc <|-- FormDoc
+    BasicDoc <|-- ProductDoc
 
     FormDoc <|-- ContactDoc
     FormDoc <|-- LoginDoc
+    FormDoc <|-- RegisterDoc
+    FormDoc <|-- AccountDoc
+
+    ProductDoc <|-- ShopDoc
+    ProductDoc <|-- CartDoc
+    ProductDoc <|-- DetailDoc
+    ProductDoc <|-- Top5Doc
+    
 
     class HtmlDoc{
+        <<abstract>>
        +show()
        -showHtmlStart()
        -showHeaderStart()
@@ -34,6 +45,7 @@ classDiagram
         #showBodyContent()
         #showHeader()
         -showMenu()
+        -showGeneralError()
         #showContent()
         -showFooter()
     }
@@ -45,8 +57,16 @@ classDiagram
         #showHeader()
         #showContent()
     }
+    class Error404Doc{
+        #showHeader()
+        #showContent()
+    }
     class FormDoc{
         <<abstract>>
+        #showFormStart()
+        #showFormField()
+        #showFormEnd()
+        #showError()
     }
     class ContactDoc{
         #showHeader()
@@ -56,5 +76,34 @@ classDiagram
         #showHeader()
         #showContent()
     }
+    class RegisterDoc{
+        #showHeader()
+        #showContent()
+    }
+    class AccountDoc {
+        #showHeader()
+        #showContent()
+    }
+    class ProductDoc{
+        <<abstract>>
+        #showActionButton() 
+    }
+    class ShopDoc{
+        #showHeader()
+        #showContent()
+    }
+    class DetailDoc{
+        #showHeader()
+        #showContent()
+    }
+    class CartDoc{
+        #showHeader()
+        #showContent()
+    }
+    class Top5Doc{
+        #showHeader()
+        #showContent()
+    }
+
 
 ```
