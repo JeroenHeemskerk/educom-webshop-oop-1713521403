@@ -19,10 +19,7 @@ classDiagram
     FormDoc <|-- AccountDoc
 
     ProductDoc <|-- ShopDoc
-    ProductDoc <|-- CartDoc
-    ProductDoc <|-- DetailDoc
-    ProductDoc <|-- Top5Doc
-    
+    ProductDoc <|-- CartDoc    
 
     class HtmlDoc{
         <<abstract>>
@@ -37,6 +34,7 @@ classDiagram
        -showHtmlEnd()
     }
     class BasicDoc{
+        <<abstract>>
         #data 
         +__construct(mydata)
         #showHeadContent()
@@ -65,6 +63,8 @@ classDiagram
         #showError()
     }
     class ContactDoc{
+        +genders
+        +comm_prefs
         #showContent()
     }
     class LoginDoc{
@@ -82,16 +82,11 @@ classDiagram
     }
     class ShopDoc{
         #showContent()
-    }
-    class DetailDoc{
-        #showContent()
+        +showWebshopProducts()
+        +showProductContent()
     }
     class CartDoc{
         #showContent()
     }
-    class Top5Doc{
-        #showContent()
-    }
-
 
 ```
