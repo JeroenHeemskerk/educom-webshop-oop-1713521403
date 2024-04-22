@@ -6,6 +6,6 @@ class AccountDoc extends FormsDoc {
         $this->showFormField("pswdOld", "Huidige wachtwoord", "password", $this->data, NULL, NULL, false);
         $this->showFormField("pswdNew", "Nieuwe wachtwoord", "password", $this->data, NULL, NULL, false);
         $this->showFormField("pswdNew2", "Herhaal wachtwoord", "password", $this->data, NULL, NULL, false);
-        $this->showFormEnd("changepswd", "Wijzig wachtwoord");
+        $this->showFormEnd("account", "Wijzig wachtwoord");
     }
 }

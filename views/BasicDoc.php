@@ -15,19 +15,21 @@ abstract class BasicDoc extends HtmlDoc {
     }
 
     private function showFavIcon() {
-        echo '<link rel="icon" type="svg" href="../Images/online-form-icon.svg">';
+        // dit werkt nu niet meer als ik het test vanuit tests/
+        echo '<link rel="icon" type="svg" href="Images/online-form-icon.svg">';
 
     }
 
     private function showStyleLinks() {
-        echo '<link rel="stylesheet" type="text/css" href="../css/styles.css">';
+        // dit werkt nu niet meer als ik het test vanuit tests/
+        echo '<link rel="stylesheet" type="text/css" href="css/styles.css">';
         echo '<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Merriweather|Open+Sans">';
     }
     
     private function showTitle() {
         echo "<title>";
         echo $this->data["title"];
-        echo "</title>";  
+        echo "</title>";
     }
 
     protected function showBodyContent() {

@@ -30,6 +30,9 @@ function getPostVar($key, $default="", $filter=false) {
 function processRequest($page) {
     $data = processPage($page);
 
+    // get the corresponding title
+    $data["title"] = getTitle($data);
+
     // Build the dynamic navigation bar
     $data["menu"] = buildMenu();
     return $data;
@@ -47,6 +50,7 @@ function processPage($page) {
             }
             else {
                 $data["page"] = $page;
+                
             }
             return $data;
 
@@ -68,7 +72,7 @@ function processPage($page) {
             doLogoutUser();
             return ["page"=>"home"];
 
-        case "changepswd":
+        case "account":
             include_once('changepswd.php');
             try {
                 $data = validateChangePswd();
@@ -107,10 +111,9 @@ function processPage($page) {
             return $data;
 
         case "shop":
-            $productId = getGetVar("detail", 0); 
             $top = getGetVar("top");
             include_once('communication.php');
-            if (!$productId && !$top) {
+            if (empty($top)) {
                 try {
                     $data = getProducts();
                     $data["page"] = $page;
@@ -121,7 +124,7 @@ function processPage($page) {
                     $data = ["errors" => $errors];
                 }
             }
-            else if ($top) {
+            else {
                 try {
                     $data = getTopKProducts($top);
                 }
@@ -131,19 +134,26 @@ function processPage($page) {
                     $data = ["errors" => $errors];
                 }
             }
-            else {
-                try {
-                    $data = getProductsByIDs([$productId]);
-                    $data["productId"] = $productId;
-                }
-                catch (Exception $e) {
-                    $errors["general"] = "Er is een technische storing, de webshop kan niet worden geladen. Probeer het later nogmaals.";
-                    logError('Shop item load failed for ' . $productId . ' SQLError: ' . $e -> getMessage());
-                    $data = ["errors" => $errors];
-                }
-            }
+
             $data["page"] = $page;
             return $data;
+
+        case "detail":
+            $productId = getGetVar("detail", 0);
+            include_once "communication.php";
+            include_once("session_manager.php");
+            try {
+                $data = getProductsByIDs([$productId]);
+                $data["productId"] = $productId;
+                $data["page"] = "detail";
+                $data["loggedIn"] = isUserLoggedIn();
+                return $data;
+            }
+            catch (Exception $e) {
+                $errors["general"] = "Er is een technische storing, de webshop kan niet worden geladen. Probeer het later nogmaals.";
+                logError('Shop item load failed for ' . $productId . ' SQLError: ' . $e -> getMessage());
+                $data = ["errors" => $errors];
+            }
 
         case "cart":
             $action = getPostVar('action');
@@ -172,12 +182,43 @@ function processPage($page) {
     }
 }
 
+function getTitle($data) {
+    $page = $data["page"];
+    switch ($page) {
+        case "thanks":
+            return "Bedankt voor je feedback!";
+        case "contact":
+            return "Contact";
+        case "home":
+            return "Home";
+        case "about":
+            return "Over Mij";
+        case "shop":
+            return "Florian's Webshop";
+        case "cart":
+            return "Winkelmandje";
+        case "register":
+            return "Registratie";
+        case "login":
+            return "Login";
+        case "account":
+            include_once("session_manager.php");
+            return "Account van " . getLoggedInUserName();
+        case "detail":
+            return $data["products"][$data["productId"]]["name"];
+        default:
+            return "Oeps, daar ging iets mis...";
+    }
+    
+    
+}
+
 function buildMenu() {
     $menu = array("home"=>"HOME", "about"=>"ABOUT", "contact"=>"CONTACT", "shop"=>"WEBSHOP", "shop&top=5"=>"TOP 5");
     include_once('session_manager.php');
     if (isUserLoggedIn()) {
         $menu["cart"] = 'CART';
-        $menu["changepswd"] = "ACCOUNT";
+        $menu["account"] = "ACCOUNT";
         $menu["logout"] = 'LOGOUT ' . getLoggedInUserName();
     } 
     else {
@@ -187,141 +228,70 @@ function buildMenu() {
     return $menu;
 }
 
-function beginDocument() {
-    echo '<!doctype html> 
-    <html>'; 
-}
-
-function showHeader($data) {
-    echo "<head><title>";
-    echo showTitle($data["page"]);
-    echo "</title>";    
-    echo '<link rel="icon" type="svg" href="Images/online-form-icon.svg">';
-    echo '<link rel="stylesheet" type="text/css" href="CSS/styles.css">';
-    echo '<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Merriweather|Open+Sans">';
-    echo '</head>';
-}
-
-function showTitle($page) {
-    switch ($page) {
-        case "contact":
-        case "thanks":
-            include_once('contact.php');
-            return getContactTitle();
-        case "about":
-            include_once('about.php');
-            return getAboutTitle();
-        case "home":
-            include_once('home.php');
-            return getHomeTitle();
-        case "register":
-            include_once('register.php');
-            return getRegisterTitle();
-        case "login":
-            include_once('login.php');
-            return getLoginTitle();
-        case "shop":
-            include_once('shop.php');
-            return getShopTitle();
-        case "cart":
-            include_once('cart.php');
-            return getCartTitle();
-        case "changepswd":
-            include_once('changepswd.php');
-            return getChangePswdTitle();
-
-        default:
-            include_once('error404.php');
-            return get404Title();
-
-    }
-}
-
-function showGeneralError($data) {
-    if (!empty($data['errors']['general'])) {
-        echo '<div class="error">' . $data['errors']['general'] . '</div>';
-    }
-}
 
 function logError($msg) {
     echo "LOGGING TO THE SERVER: " . $msg;
- }
-
-function showBody($data) {
-    echo "<body>" . PHP_EOL;
-    echo "<h1>Florian&apos;s Rariteitenkabinet</h1>";
-    showNavBar($data);
-    showGeneralError($data);
-    showContent($data);
-    showFooter();
-    echo "</body>" . PHP_EOL;
 }
 
-function showNavBar($data) {
-    $menu = $data["menu"];
-    echo '<ul class="navbar">';
-    foreach($menu as $page=>$label) {
-        echo '<li><a href="index.php?page=' . $page . '">' . $label . '</a></li>';
-    }
-    echo '</ul>';
-}
-
-function showContent($data) {
+function showPage($data) {
     $page = $data["page"];
-
-    switch ($page) {
-        case "about":
-            include_once('about.php');
-            showAboutContent();
-            break;
-        case "contact":
-            include_once('contact.php');
-            showContactContent($data);
-            break;
-        case "thanks":
-            include_once('contact.php');
-            showContactThanks($data);
-            break;
-        case "home":
-            include_once('home.php');
-            showHomeContent();
-            break;
-        case "register":
-            include_once('register.php');
-            showRegisterContent($data);
-            break;
-        case "login":
-            include_once('login.php');
-            showLoginContent($data);
-            break;
-        case "shop":
-            include_once('shop.php');
-            showShopContent($data);
-            break;
-        case "cart":
-            include_once('cart.php');
-            showCartContent($data);
-            break;
-        case "changepswd":
-            include_once('changepswd.php');
-            showChangePswd($data);
-            break;
-
+    $view = NULL;
+    switch($page) {
         default:
-            include_once('error404.php');
-            show404Content();
+            include_once("views/Error404Doc.php");
+            $view = new Error404Doc($data);
+            break;
+
+        case "home":
+            include_once("views/HomeDoc.php");
+            $view = new HomeDoc($data);
+            break;
+
+        case "about":
+            include_once("views/AboutDoc.php");
+            $view = new AboutDoc($data);
+            break;
+
+        case "contact":
+            include_once("views/ContactDoc.php");
+            $view = new ContactDoc($data);
+            break;
+
+        case "thanks":
+            include_once("views/ThanksDoc.php");
+            $view = new ThanksDoc($data);
+            break;
+
+        case "login":
+            include_once("views/LoginDoc.php");
+            $view = new LoginDoc($data);
+            break;
+
+        case "register":
+            include_once("views/RegisterDoc.php");
+            $view = new RegisterDoc($data);
+            break;
+
+        case "account":
+            include_once("views/AccountDoc.php");
+            $view = new AccountDoc($data);
+            break;
+
+        case "shop":
+            include_once("views/ShopDoc.php");
+            $view = new ShopDoc($data);
+            break;
+
+        case "detail":
+            include_once("views/DetailDoc.php");
+            $view = new DetailDoc($data);
+            break;
+
+        case "cart":
+            include_once("views/CartDoc.php");
+            $view = new CartDoc($data);
+            break;
     }
-}
 
-function showPage($page) {
-    beginDocument();
-    showHeader($page);
-    showBody($page);
-    echo "</html>";
-}
-
-function showFooter() {
-    echo '<footer>
-    <p>&copy; Florian van der Steen 2024<br></p>
-    </footer>';
+    $view->show();
 }
