@@ -1,5 +1,4 @@
 <?php
-// voor nu nog niet abstract maar ik heb sterke vermoedens dat wel kan/moet
 abstract class HtmlDoc {
     private function showHtmlStart() {
         echo "<!DOCTYPE html><html>";
