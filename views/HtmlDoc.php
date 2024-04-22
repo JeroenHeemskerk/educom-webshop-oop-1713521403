@@ -1,6 +1,6 @@
 <?php
 // voor nu nog niet abstract maar ik heb sterke vermoedens dat wel kan/moet
-class HtmlDoc {
+abstract class HtmlDoc {
     private function showHtmlStart() {
         echo "<!DOCTYPE html><html>";
     }
@@ -22,9 +22,7 @@ class HtmlDoc {
         echo "<body>";
     }
 
-    protected function showBodyContent() {
-        echo "";
-    }
+    abstract protected function showBodyContent();
 
     private function showBodyEnd() {
         echo "</body>";

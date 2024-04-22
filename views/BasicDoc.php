@@ -1,7 +1,7 @@
 <?php 
 
 require('HtmlDoc.php');
-class BasicDoc extends HtmlDoc {
+abstract class BasicDoc extends HtmlDoc {
     protected $data;
 
     public function __construct($pageData) {
@@ -57,10 +57,7 @@ class BasicDoc extends HtmlDoc {
         }
     }
 
-    // Ik vermoed dat ook een abstract functie moet worden
-    protected function showContent() {
-        echo "ALLES VOOR DE CONTENT";
-    }
+    abstract protected function showContent();
 
     private function showFooter() {
         echo '<footer>
