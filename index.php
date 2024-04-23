@@ -121,7 +121,7 @@ function processPage($page) {
                 catch (Exception $e) {
                     $errors["general"] = "Er is een technische storing, de webshop kan niet worden geladen. Probeer het later nogmaals.";
                     logError('Shop load failed SQLError: ' . $e -> getMessage());
-                    $data = ["errors" => $errors];
+                    $data = ["errors" => $errors, "products"=>array()];
                 }
             }
             else {
@@ -131,7 +131,7 @@ function processPage($page) {
                 catch (Exception $e) {
                     $errors["general"] = "Er is een technische storing, de webshop kan niet worden geladen. Probeer het later nogmaals.";
                     logError('Shop load failed SQLError: ' . $e -> getMessage());
-                    $data = ["errors" => $errors];
+                    $data = ["errors" => $errors, "products"=>array()];
                 }
             }
 

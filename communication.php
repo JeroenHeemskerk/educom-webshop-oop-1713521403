@@ -142,6 +142,9 @@ function getProductsByIDs($ids) {
     $conn = makeDataBaseConnection();
 
     try {
+        for($i = 0; $i < count($ids); $i++) {
+            $ids[$i] = mysqli_real_escape_string($conn, $ids[$i]);
+        }
         $query = 'SELECT * FROM products WHERE id IN (' . implode(',', $ids) . ')';
         $result = executeDataBaseQuery($query, $conn);
     
@@ -191,6 +194,8 @@ function addOrder() {
         $cart = getCart();
         $query = "INSERT INTO orders_products (order_id, product_id, quantity) VALUES ";
         foreach($cart as $productId=>$qty) {
+            $productId = mysqli_real_escape_string($conn, $productId);
+            $qty = mysqli_real_escape_string($conn, $qty);
             // werkt mysql_insert_id als er heel veel aanvragen tegelijkertijd binnenkomen?
             $query .= "('" . mysqli_insert_id($conn) . "','" . $productId . "','" . $qty . "'),";
 
@@ -209,6 +214,7 @@ function getTopKProducts($k) {
     $conn = makeDataBaseConnection();
 
     try {
+        $k = mysqli_real_escape_string($conn, $k);
         $query = "SELECT p.*, SUM(op.quantity) as total_sold FROM orders_products as op
         RIGHT JOIN products as p ON op.product_id = p.id
         LEFT JOIN orders as o ON op.order_id = o.id
