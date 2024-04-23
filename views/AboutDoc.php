@@ -3,7 +3,7 @@ require "BasicDoc.php";
 class AboutDoc extends BasicDoc {
     protected function showContent() {
         echo '<h2>Over Florian van der Steen</h2>
-        <img alt="ProfielFotoFlorian" id="profiel-foto" src="../Images/Klein072.JPG">
+        <img alt="ProfielFotoFlorian" id="profiel-foto" src="Images/Klein072.JPG">
         <p class="content">Mijn naam is Florian Antonie van der Steen en ik ben 24 jaar oud. Ik groeide op in het centrum van Utrecht maar woon nu al 5 jaar in Amsterdam. Ik heb drie jaar Artificial Intelligence (AI) gestudeerd aan de Universiteit van Amsterdam en daarna twee jaar de AI onderzoeksmaster gedaan in Utrecht. In juli 2023 studeerde ik af na een stage bij de Auditdienst Rijk over discriminerende algoritmes.</p>
         <p class="content">In mijn vrije tijd ben ik een fanatieke jongleur. Op mijn elfde werd ik lid van het jeugdcircus in Utrecht en was ik al verknocht aan jongleren. In mijn vrije tijd organiseer ik momenteel het <a href="https://nederlandsjongleerfestival.nl">Nederlands Jongleer Festival.</a> Verder heb ik nog enkele ander hobbies maar die zijn veel gebruikelijker:</p>
         <ul class="content">
