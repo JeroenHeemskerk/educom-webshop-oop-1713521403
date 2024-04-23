@@ -19,7 +19,9 @@ classDiagram
     FormDoc <|-- AccountDoc
 
     ProductDoc <|-- ShopDoc
-    ProductDoc <|-- CartDoc    
+    ProductDoc <|-- CartDoc
+    ProductDoc <|-- DetailDoc
+    ProductDoc <|-- TopKDoc
 
     class HtmlDoc{
         <<abstract>>
@@ -82,11 +84,16 @@ classDiagram
     }
     class ShopDoc{
         #showContent()
-        +showWebshopProducts()
-        +showProductContent()
     }
     class CartDoc{
         #showContent()
     }
+    class DetailDoc {
+        #showContent()
+    }
+    class TopKDoc {
+        #showContent()
+    }
+
 
 ```
