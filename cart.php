@@ -29,24 +29,14 @@ function getCartProducts() {
     return ["products" => $cartProducts, "total"=>$total];
 }
 
-function handleCartAction($action, $id) {
-    // returns the page to redirect to
+function handleCartAction($action, $id, $fromPage, $toPage, $k=NULL) {
     include_once('session_manager.php');
     include_once('communication.php');
     $errors = array();
     switch ($action) {
         case "addToCart":
-            addToCart($id);
-            try {
-                $products = getProductsByIDs([$id])["products"];
-            }
-            catch (Exception $e) {
-                $errors["general"] = "Er is een technische storing, de winkelmand werkt momenteel niet. Probeer het later nogmaals.";
-                logError('Cart action failed for ' . getLoggedInEmail() . ', SQLError: ' . $e -> getMessage());
-                $products = array();
-            }
-            return ["products"=>$products, "page"=>"detail", "loggedIn"=>isUserLoggedIn(), "productId"=>$id, "errors"=>$errors];
-
+            return handleAddToCart($id, $fromPage, $toPage, $k);
+            
         case "purchase":
             $errors = array();
             try {
@@ -57,8 +47,49 @@ function handleCartAction($action, $id) {
                 $errors["general"] = "Er is een technische storing, u kunt momenteel niet afrekenen. Probeer het later nogmaals.";
                 logError('Purchase failed for ' . getLoggedInEmail() . ', SQLError: ' . $e -> getMessage());
             }
-            return ["products"=>array(), "total"=>0.0, "page"=>"cart", "errors"=>$errors];
+            return ["products"=>array(), "total"=>0.0, "page"=>$toPage, "errors"=>$errors];
     }
+}
+
+function handleAddToCart($id, $fromPage, $toPage, $k) {
+    addToCart($id);
+    $errors = array();
+    switch ($fromPage) {
+        case "shop":
+            try {
+                $products = getProducts()["products"];
+            }
+            catch (Exception $e) {
+                $errors["general"] = "Er is een technische storing, de winkelmand werkt momenteel niet. Probeer het later nogmaals.";
+                logError('Cart action failed for ' . getLoggedInEmail() . ', SQLError: ' . $e -> getMessage());
+                $products = array();
+            }
+            return ["products"=>$products, "page"=>$toPage, "loggedIn"=>isUserLoggedIn(), "productId"=>$id, "errors"=>$errors];
+
+        case "detail":
+            try {
+                $products = getProductsByIDs([$id])["products"];
+            }
+            catch (Exception $e) {
+                $errors["general"] = "Er is een technische storing, de winkelmand werkt momenteel niet. Probeer het later nogmaals.";
+                logError('Cart action failed for ' . getLoggedInEmail() . ', SQLError: ' . $e -> getMessage());
+                $products = array();
+            }
+            return ["products"=>$products, "page"=>$toPage, "loggedIn"=>isUserLoggedIn(), "productId"=>$id, "errors"=>$errors];
+            
+        case "topK":
+            try {
+                $products = getTopKProducts($k)["products"];
+            }
+            catch (Exception $e) {
+                $errors["general"] = "Er is een technische storing, de winkelmand werkt momenteel niet. Probeer het later nogmaals.";
+                logError('Cart action failed for ' . getLoggedInEmail() . ', SQLError: ' . $e -> getMessage());
+                $products = array();
+            }
+            return ["products"=>$products, "page"=>$toPage, "loggedIn"=>isUserLoggedIn(), "productId"=>$id, "errors"=>$errors, "k"=>$k];
+        }
+
+    
 }
 
 function showActionButton($action, $page, $buttonId, $buttonText, $productId=NULL) {

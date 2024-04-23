@@ -130,7 +130,7 @@ textarea {
     margin-top: 4px;
 }
 
-.detail-info input, #purchaseButton {
+.detail-info input, .product-list input, #purchaseButton {
     border: none;
     font-family: "Open Sans", sans-serif;
     background-color: #D57A6A;

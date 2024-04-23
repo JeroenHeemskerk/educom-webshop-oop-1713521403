@@ -1,6 +1,6 @@
-<?php
+<?php 
 require "ProductDoc.php";
-class ShopDoc extends ProductDoc {
+class TopKDoc extends ProductDoc {
     protected function showContent() {
         $products = $this->data["products"];
         echo '<div class="product-list">';
@@ -13,7 +13,7 @@ class ShopDoc extends ProductDoc {
             echo '</div></a>' . PHP_EOL;
             
             if ($this->data["loggedIn"]) {
-                $this->showActionButton("addToCart", "cart_action", "shop", "shop", "cartAddButton", "Voeg toe aan CART", $id);
+                $this->showActionButton("addToCart", "cart_action", "topK", "topK", "cartAddButton", "Voeg toe aan CART", $id, $this->data["k"]);
             }
             echo "</div>";
         }

@@ -110,32 +110,38 @@ function processPage($page) {
             }
             return $data;
 
+        // shop en topK lijken natuurlijk heel erg op elkaar.
+        // Ik weet nog niet goed hoe ik hier mee om moet gaan. 
         case "shop":
-            $top = getGetVar("top");
             include_once('communication.php');
-            if (empty($top)) {
-                try {
-                    $data = getProducts();
-                    $data["page"] = $page;
-                }
-                catch (Exception $e) {
-                    $errors["general"] = "Er is een technische storing, de webshop kan niet worden geladen. Probeer het later nogmaals.";
-                    logError('Shop load failed SQLError: ' . $e -> getMessage());
-                    $data = ["errors" => $errors, "products"=>array()];
-                }
+            try {
+                $data = getProducts();
+                $data["page"] = $page;
             }
-            else {
-                try {
-                    $data = getTopKProducts($top);
-                }
-                catch (Exception $e) {
-                    $errors["general"] = "Er is een technische storing, de webshop kan niet worden geladen. Probeer het later nogmaals.";
-                    logError('Shop load failed SQLError: ' . $e -> getMessage());
-                    $data = ["errors" => $errors, "products"=>array()];
-                }
+            catch (Exception $e) {
+                $errors["general"] = "Er is een technische storing, de webshop kan niet worden geladen. Probeer het later nogmaals.";
+                logError('Shop load failed SQLError: ' . $e -> getMessage());
+                $data = ["errors" => $errors, "products"=>array()];
             }
-
-            $data["page"] = $page;
+            include_once("session_manager.php");
+            $data["loggedIn"] = isUserLoggedIn();
+            return $data;
+        
+        case "topK":
+            include_once('communication.php');
+            $top = getGetVar("top");
+            try {
+                $data = getTopKProducts($top);
+                $data["page"] = "topK";
+                $data["k"] = $top;
+            }
+            catch (Exception $e) {
+                $errors["general"] = "Er is een technische storing, de webshop kan niet worden geladen. Probeer het later nogmaals.";
+                logError('Shop load failed SQLError: ' . $e -> getMessage());
+                $data = ["errors" => $errors, "products"=>array()];
+            }
+            include_once('session_manager.php');
+            $data["loggedIn"] = isUserLoggedIn();
             return $data;
 
         case "detail":
@@ -147,35 +153,39 @@ function processPage($page) {
                 $data["productId"] = $productId;
                 $data["page"] = "detail";
                 $data["loggedIn"] = isUserLoggedIn();
-                return $data;
             }
             catch (Exception $e) {
                 $errors["general"] = "Er is een technische storing, de webshop kan niet worden geladen. Probeer het later nogmaals.";
                 logError('Shop item load failed for ' . $productId . ' SQLError: ' . $e -> getMessage());
                 $data = ["errors" => $errors];
             }
+            return $data;
+
 
         case "cart":
-            $action = getPostVar('action');
-            $id = getPostVar('productId');
             include_once('cart.php');
-            // some cart actions don't require an id
-            if (empty($action)) {
-                try {
-                    $data = getCartProducts();
-                    $data["page"] = $page;
-                }
-
-                catch (Exception $e) {
-                    $data["errors"] = array();
-                    $data["errors"]["general"] = "Er is een technische storing, u kunt uw winkelmand niet inzien. Probeer het later nogmaals.";
-                    logError('Failed cart load SQLError: ' . $e -> getMessage());
-                    $data["page"] = "home";
-                }
-                return $data;
+            try {
+                $data = getCartProducts();
+                $data["page"] = $page;
             }
 
-            return handleCartAction($action, $id);
+            catch (Exception $e) {
+                $data["errors"] = array();
+                $data["errors"]["general"] = "Er is een technische storing, u kunt uw winkelmand niet inzien. Probeer het later nogmaals.";
+                logError('Failed cart load SQLError: ' . $e -> getMessage());
+                $data["page"] = "home";
+            }
+            return $data;
+
+        case "cart_action":
+            $action = getPostVar('action');
+            $id = getPostVar('productId');
+            $toPage = getPostVar('nextPage');
+            $fromPage = getPostVar('fromPage');
+            $k = getPostVar('k', NULL);
+
+            include_once("cart.php");
+            return handleCartAction($action, $id, $fromPage, $toPage, $k);
 
         default:
             return ["page"=>$page];
@@ -195,6 +205,8 @@ function getTitle($data) {
             return "Over Mij";
         case "shop":
             return "Florian's Webshop";
+        case "topK":
+            return "Florian's populairse producten";
         case "cart":
             return "Winkelmandje";
         case "register":
@@ -214,7 +226,7 @@ function getTitle($data) {
 }
 
 function buildMenu() {
-    $menu = array("home"=>"HOME", "about"=>"ABOUT", "contact"=>"CONTACT", "shop"=>"WEBSHOP", "shop&top=5"=>"TOP 5");
+    $menu = array("home"=>"HOME", "about"=>"ABOUT", "contact"=>"CONTACT", "shop"=>"WEBSHOP", "topK&top=5"=>"TOP 5");
     include_once('session_manager.php');
     if (isUserLoggedIn()) {
         $menu["cart"] = 'CART';
@@ -280,6 +292,11 @@ function showPage($data) {
         case "shop":
             include_once("views/ShopDoc.php");
             $view = new ShopDoc($data);
+            break;
+
+        case "topK":
+            include_once("views/TopKDoc.php");
+            $view = new TopKDoc($data);
             break;
 
         case "detail":

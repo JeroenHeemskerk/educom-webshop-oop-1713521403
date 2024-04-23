@@ -115,7 +115,6 @@ function getUserByEmail($email) {
     return $user["user"]; 
 }
 
-
 function authenticateUser($email, $pswd) { 
     if (empty($email)) {
         return ['result' => RESULT_EMPTY_EMAIL];

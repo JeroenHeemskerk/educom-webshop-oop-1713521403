@@ -13,7 +13,7 @@ class DetailDoc extends ProductDoc {
         echo '<p>' . $product["description"] . '<br><b>Prijs</b>: &euro;' . $product["price"] / 100 . '</p>';
     
         if ($this->data["loggedIn"]) {
-            $this->showActionButton("addToCart", "cart", "cartAddButton", "Voeg toe aan CART", $id);
+            $this->showActionButton("addToCart", "cart_action", "detail", "detail", "cartAddButton", "Voeg toe aan CART", $id);
         }
         echo '</div>';
         echo '</div>';

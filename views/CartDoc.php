@@ -17,7 +17,7 @@ class CartDoc extends ProductDoc {
         echo '<p id="total-cart">Totaal: &euro;' . $this->data["total"] / 100 . ',-</p>';
 
         if (!empty($products)) {
-            $this->showActionButton("purchase", "cart", "purchaseButton", "Afrekenen");
+            $this->showActionButton("purchase", "cart_action", "cart", "cart", "purchaseButton", "Afrekenen");
         }
     }
 }
