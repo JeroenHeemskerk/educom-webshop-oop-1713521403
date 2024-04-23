@@ -10,11 +10,11 @@ class CartDoc extends ProductDoc {
             echo '<div>';
             echo '<img src=Images/' . $product["fname"] . '>';
             echo '<p>Aantal: ' . $product["count"] . '<br>';
-            echo 'Prijs: &euro;' . $product["subtotal"] . ',-<br>';
+            echo 'Prijs: &euro;' . $product["subtotal"] / 100 . ',-<br>';
             echo '</p>';
             echo '</div></a>';
         }
-        echo '<p id="total-cart">Totaal: &euro;' . $this->data["total"] . ',-</p>';
+        echo '<p id="total-cart">Totaal: &euro;' . $this->data["total"] / 100 . ',-</p>';
 
         if (!empty($products)) {
             $this->showActionButton("purchase", "cart", "purchaseButton", "Afrekenen");

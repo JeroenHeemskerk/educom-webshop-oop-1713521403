@@ -189,10 +189,10 @@ function addOrder() {
         executeDataBaseQuery($query, $conn);
 
         $cart = getCart();
-        $query = "INSERT INTO ordersproducts (order_id, product_id, count) VALUES ";
-        foreach($cart as $productId=>$count) {
+        $query = "INSERT INTO orders_products (order_id, product_id, quantity) VALUES ";
+        foreach($cart as $productId=>$qty) {
             // werkt mysql_insert_id als er heel veel aanvragen tegelijkertijd binnenkomen?
-            $query .= "('" . mysqli_insert_id($conn) . "','" . $productId . "','" . $count . "'),";
+            $query .= "('" . mysqli_insert_id($conn) . "','" . $productId . "','" . $qty . "'),";
 
         }
         // replace , with ;
@@ -209,7 +209,7 @@ function getTopKProducts($k) {
     $conn = makeDataBaseConnection();
 
     try {
-        $query = "SELECT p.*, SUM(op.count) as total_sold FROM ordersproducts as op
+        $query = "SELECT p.*, SUM(op.quantity) as total_sold FROM orders_products as op
         RIGHT JOIN products as p ON op.product_id = p.id
         LEFT JOIN orders as o ON op.order_id = o.id
         WHERE o.order_date > DATE_SUB(date(CURRENT_DATE), INTERVAL 7 DAY) or o.order_date IS NULL

@@ -9,7 +9,7 @@ class ShopDoc extends ProductDoc {
             echo '<a class="product" href="index.php?page=detail&detail=' . $id . '"><div class="product">' . PHP_EOL;
             echo '<h3>' . $product["name"] . '</h3>' . PHP_EOL;
             echo '<img src="Images/' . $product["fname"] . '" alt="' . $product["description"] . '">';
-            echo '<p>Prijs: &euro;' . $product["price"]  . ',-</p>';
+            echo '<p>Prijs: &euro;' . $product["price"] / 100  . ',-</p>';
             echo '</div></a>' . PHP_EOL;
         }
         echo '</div>';

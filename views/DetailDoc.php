@@ -10,10 +10,8 @@ class DetailDoc extends ProductDoc {
         echo '<img src="Images/' . $product["fname"] . '" alt="' . $product["description"] . '">';
         echo '<div class="detail-info">';
         echo '<h4>' . $product["name"] . '</h4>';
-        echo '<p>' . $product["description"] . '<br><b>Prijs</b>: &euro;' . $product["price"] . '</p>';
+        echo '<p>' . $product["description"] . '<br><b>Prijs</b>: &euro;' . $product["price"] / 100 . '</p>';
     
-        // dit misschien verplaatsen naar $data
-        include_once("session_manager.php");
         if ($this->data["loggedIn"]) {
             $this->showActionButton("addToCart", "cart", "cartAddButton", "Voeg toe aan CART", $id);
         }

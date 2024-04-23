@@ -45,7 +45,7 @@ function handleCartAction($action, $id) {
                 logError('Cart action failed for ' . getLoggedInEmail() . ', SQLError: ' . $e -> getMessage());
                 $products = array();
             }
-            return ["products"=>$products, "page"=>"shop", "productId"=>$id, "errors"=>$errors];
+            return ["products"=>$products, "page"=>"detail", "loggedIn"=>isUserLoggedIn(), "productId"=>$id, "errors"=>$errors];
 
         case "purchase":
             $errors = array();
