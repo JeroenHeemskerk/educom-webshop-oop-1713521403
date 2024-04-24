@@ -33,11 +33,9 @@ class PageModel {
     public function getRequestedPage() {
         $this->isPost = ($_SERVER["REQUEST_METHOD"] == "POST");
         if ($this->isPost) {
-            // default 404?
             $this->page = $this->getPostVar("page");
         }
         else {
-            // default 404?
             $this->page = $this->getGetVar("page");
         }
     }
@@ -64,6 +62,9 @@ class PageModel {
             case "about":
                 $this->title = "Over Mij";
                 break;
+
+            default:
+                $this->title = "Oeps, daar ging iets mis...";
         }
     }
 

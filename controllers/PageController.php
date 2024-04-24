@@ -33,6 +33,16 @@ class PageController {
                 include_once("views/HomeDoc.php");
                 $view = new HomeDoc($this->model);
                 break;
+
+            case "about":
+                include_once("views/AboutDoc.php");
+                $view = new AboutDoc($this->model);
+                break;
+
+            default:
+                include_once("views/Error404Doc.php");
+                $view = new Error404Doc($this->model);
+                break;
         }
         $view->show();
     }
