@@ -68,9 +68,11 @@ class PageModel {
             case "about":
                 $this->title = "Over Mij";
                 break;
-
             case "login":
                 $this->title = "Login";
+                break;
+            case "register":
+                $this->title = "Registreren";
                 break;
 
             default:

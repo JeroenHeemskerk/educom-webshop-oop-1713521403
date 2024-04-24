@@ -27,6 +27,19 @@ class PageController {
                     $this->model->page = "home";
                 }
                 break;
+            case "logout":
+                require_once("models/UserModel.php");
+                $this->model = new UserModel($this->model);
+                $this->model->doLogoutUser();
+                $this->model->page = "home";
+            case "register":
+                require_once("models/UserModel.php");
+                $this->model = new UserModel($this->model);
+                $this->model->validateRegister();
+                if ($this->model->valid) {
+                    $this->model->addAccount();
+                    $this->model->page = "home";
+                }
         }
     }
 
@@ -50,6 +63,11 @@ class PageController {
                 include_once("views/LoginDoc.php");
                 $view = new LoginDoc($this->model);
                 break;    
+
+            case "register":
+                include_once("views/RegisterDoc.php");
+                $view = new RegisterDoc($this->model);
+                break;
 
             default:
                 include_once("views/Error404Doc.php");

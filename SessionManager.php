@@ -24,4 +24,10 @@ class SessionManager {
         $_SESSION["userId"] = $values["userId"]; 
         $_SESSION["cart"] = array();
     }
+
+    public function doLogoutUser() {
+        session_unset();
+        session_destroy();
+    }
+     
 }
