@@ -2,10 +2,10 @@
 
 require('HtmlDoc.php');
 abstract class BasicDoc extends HtmlDoc {
-    protected $data;
+    protected $model;
 
-    public function __construct($pageData) {
-        $this->data = $pageData;
+    public function __construct($pageModel) {
+        $this->model = $pageModel;
     }
 
     protected function showHeadContent() {
@@ -28,7 +28,7 @@ abstract class BasicDoc extends HtmlDoc {
     
     private function showTitle() {
         echo "<title>";
-        echo $this->data["title"];
+        echo $this->model->title;
         echo "</title>";
     }
 
@@ -45,7 +45,7 @@ abstract class BasicDoc extends HtmlDoc {
     }
 
     private function showMenu() {
-        $menu = $this->data["menu"];
+        $menu = $this->model->menu;
         echo '<ul class="navbar">';
         foreach($menu as $page=>$label) {
             echo '<li><a href="index.php?page=' . $page . '">' . $label . '</a></li>';
@@ -54,8 +54,8 @@ abstract class BasicDoc extends HtmlDoc {
     }
 
     private function showGeneralError() {
-        if (!empty($this->data['errors']['general'])) {
-            echo '<div class="error">' . $this->data['errors']['general'] . '</div>';
+        if (array_key_exists("general", $this->model->errors)) {
+            echo '<div class="error">' . $this->model->errors['general'] . '</div>';
         }
     }
 

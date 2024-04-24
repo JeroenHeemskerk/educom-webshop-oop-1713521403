@@ -1,8 +1,13 @@
 <?php 
 if (session_status() !== PHP_SESSION_ACTIVE) {session_start();}
-$page = getRequestedPage();
-$data = processRequest($page);
-showPage($data);
+require_once("controllers/PageController.php");
+
+$controller = new PageController();
+$controller -> handleRequest();
+
+// $page = getRequestedPage();
+// $data = processRequest($page);
+// showPage($data);
 
 function getRequestedPage() {
     $request_type = $_SERVER['REQUEST_METHOD'];
@@ -221,8 +226,6 @@ function getTitle($data) {
         default:
             return "Oeps, daar ging iets mis...";
     }
-    
-    
 }
 
 function buildMenu() {
