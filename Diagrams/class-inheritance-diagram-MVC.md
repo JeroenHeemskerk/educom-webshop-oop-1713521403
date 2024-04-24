@@ -6,29 +6,60 @@ classDiagram
     note "+ = public, - = private, # = protected"
     %% A <|-- B means that class B inherits from class A %%
 
-    BasicController <|-- UserController
-    BasicController <|-- ProductController
+    BasicModel <|-- UserModel
+    BasicModel <|-- ProductModel
 
-    class BasicController {
-        #getRequestedPage()
+    class PageController {
+        -model
+        #handleRequest()
+        #getRequest()
+        #processRequest()
+        #showResponse()
+
+    }
+    class BasicModel {
+        #isPost
+        +page
+        +menu
+        +errors
+        #sessionManager
+        __construct()
         +getPostVar()
         +getGetVar()
+        #getRequestedPage()
+        #createMenu()
+        #getLoggedInUserName()
+        #isUerLoggedIn()
     }
 
-    class UserController {
-        
+    class UserModel {
+        #values
+        #errors
+        #valid
+        +userConstants
+        __construct()
+        #validateLogin()
+        #authenticateUser()
+        #doLoginUser()
+        #doLogoutUser()
+        #validateRegister()
+        #addAccount()
+        #validateChangePassword()
+        #changePassword()
+        #validateContact()
     }
 
-    class ProductController {
-
-    }
-
-    class View {
-
-    }
-
-    class Model {
-        +processRequest()
+    class ProductModel {
+        +products
+        +cart
+        +cartTotal
+        __construct()
+        #getProducts()
+        #getProductsByIDs()
+        #getTopKProducts()
+        #getCartProducts()
+        #addToCart()
+        #addPurchase()
     }
 
 ```
