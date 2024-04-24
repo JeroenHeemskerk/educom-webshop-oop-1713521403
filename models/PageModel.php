@@ -1,12 +1,12 @@
 <?php
-require("SessionManager.php");
+require_once("SessionManager.php");
 class PageModel {
     protected $isPost = false;
     public $page;
     public $menu;
     public $title;
     public $errors = array();
-    private $sessionManager;
+    protected $sessionManager;
 
     public function __construct($copy) {
         if (empty($copy)) {
@@ -14,17 +14,23 @@ class PageModel {
         }
         else {
             // copy constructor
+            $this->isPost = $copy->isPost;
+            $this->page = $copy->page;
+            $this->menu = $copy->menu;
+            $this->title = $copy->title;
+            $this->errors = $copy->errors;
+            $this->sessionManager = $copy->sessionManager;
         }
 
     }
 
-    private function getPostVar($key, $default="", $filter=false) { 
+    protected function getPostVar($key, $default="", $filter=false) { 
         $value = filter_input(INPUT_POST, $key, $filter | FILTER_SANITIZE_SPECIAL_CHARS); 
     
         return isset($value) ? trim($value) : $default;   
     }
 
-    private function getGetVar($key, $default="") {  
+    protected function getGetVar($key, $default="") {  
         $value = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);  
          
         return isset($value) ? trim($value) : $default;
@@ -63,9 +69,16 @@ class PageModel {
                 $this->title = "Over Mij";
                 break;
 
+            case "login":
+                $this->title = "Login";
+                break;
+
             default:
                 $this->title = "Oeps, daar ging iets mis...";
         }
     }
 
+    protected function LogError($e) {
+        echo $e;
+    }
 }

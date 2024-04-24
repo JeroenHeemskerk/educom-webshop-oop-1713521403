@@ -14,6 +14,14 @@ class SessionManager {
     }
 
     public function getLoggedInUserName() { 
-        return getSessionVar('userName');
+        return $this->getSessionVar('userName');
+    }
+
+    public function doLoginUser($values) {
+        if (session_status() !== PHP_SESSION_ACTIVE) {session_start();}
+        $_SESSION["email"] = $values["email"];
+        $_SESSION["userName"] = $values["userName"];
+        $_SESSION["userId"] = $values["userId"]; 
+        $_SESSION["cart"] = array();
     }
 }

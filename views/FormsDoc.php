@@ -16,9 +16,9 @@ abstract class FormsDoc extends BasicDoc {
         echo '</form>';
     }
 
-    protected function showFormField($fieldName, $label, $type, $data, $placeholder=NULL, $options=NULL, $optional=true) {
-        $errors = $data["errors"];
-        $value = ($type == 'password') ? '' : $data['values'][$fieldName];
+    protected function showFormField($fieldName, $label, $type, $model, $placeholder=NULL, $options=NULL, $optional=true) {
+        $errors = $model->errors;
+        $value = ($type == 'password') ? '' : $model->values[$fieldName];
     
         echo '<div>';
         echo '<label for="' . $fieldName . '">' . $label . ': </label>';

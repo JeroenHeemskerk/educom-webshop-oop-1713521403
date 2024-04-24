@@ -1,5 +1,5 @@
 <?php
-require("models/PageModel.php");
+require_once("models/PageModel.php");
 class PageController {
     private $model;
     public function __construct() {
@@ -17,10 +17,17 @@ class PageController {
     }
 
     private function processRequest() {
-        // switch ($this->model->page) {
-        //     case "home":
-
-        // }
+        switch ($this->model->page) {
+            case "login":
+                require_once("models/UserModel.php");
+                $this->model = new UserModel($this->model);
+                $this->model->validateLogin();
+                if ($this->model->valid) {
+                    $this->model->doLoginUser();
+                    $this->model->page = "home";
+                }
+                break;
+        }
     }
 
     private function showResponse() {
@@ -38,6 +45,11 @@ class PageController {
                 include_once("views/AboutDoc.php");
                 $view = new AboutDoc($this->model);
                 break;
+
+            case "login":
+                include_once("views/LoginDoc.php");
+                $view = new LoginDoc($this->model);
+                break;    
 
             default:
                 include_once("views/Error404Doc.php");
