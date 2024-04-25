@@ -27,11 +27,14 @@ class PageController {
                     $this->model->page = "home";
                 }
                 break;
+
             case "logout":
                 require_once("models/UserModel.php");
                 $this->model = new UserModel($this->model);
                 $this->model->doLogoutUser();
                 $this->model->page = "home";
+                break;
+
             case "register":
                 require_once("models/UserModel.php");
                 $this->model = new UserModel($this->model);
@@ -40,6 +43,8 @@ class PageController {
                     $this->model->addAccount();
                     $this->model->page = "home";
                 }
+                break;
+
             case "account":
                 require_once("models/UserModel.php");
                 $this->model = new UserModel($this->model);
@@ -48,6 +53,8 @@ class PageController {
                     $this->model->changePassword();
                     $this->model->page = "home";
                 }
+                break;
+
              case "contact":
                 require_once("models/UserModel.php");
                 $this->model = new UserModel($this->model);
@@ -55,6 +62,8 @@ class PageController {
                 if ($this->model->valid) {
                     $this->model->page = "thanks";
                 }
+                break;
+                
             case "shop":
                 require_once("models/ProductModel.php");
                 $this->model = new ProductModel($this->model);

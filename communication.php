@@ -196,7 +196,6 @@ function addOrder($cart) {
         foreach($cart as $productId=>$qty) {
             $productId = mysqli_real_escape_string($conn, $productId);
             $qty = mysqli_real_escape_string($conn, $qty);
-            // werkt mysql_insert_id als er heel veel aanvragen tegelijkertijd binnenkomen?
             $query .= "('" . mysqli_insert_id($conn) . "','" . $productId . "','" . $qty . "'),";
 
         }

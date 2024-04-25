@@ -56,10 +56,10 @@ class UserModel extends PageModel {
 
     public function validateRegister() {
         if ($this->isPost) {
-            $this->values["user"] = getPostVar("user");
-            $this->values["email"] =  getPostVar("email", FILTER_SANITIZE_EMAIL);
-            $this->values["pswd"] =  getPostVar("pswd");
-            $this->values["pswd2"] =  getPostVar("pswd2");
+            $this->values["user"] = $this->getPostVar("user");
+            $this->values["email"] = $this->getPostVar("email", FILTER_SANITIZE_EMAIL);
+            $this->values["pswd"] = $this->getPostVar("pswd");
+            $this->values["pswd2"] = $this->getPostVar("pswd2");
 
             $this->checkRegisterEmpty();
 
@@ -127,7 +127,6 @@ class UserModel extends PageModel {
             $this->values["pswd"] = $this->getPostVar("pswd");
             $this->values["pswdNew"] =  $this->getPostVar("pswdNew");
             $this->values["pswdNew2"] =  $this->getPostVar("pswdNew2");
-            include_once('session_manager.php');
             $this->values["email"] = $this->sessionManager->getLoggedInEmail();
 
             try {
@@ -162,7 +161,7 @@ class UserModel extends PageModel {
             } 
             catch (Exception $e) {
                 $this->errors["general"] = "Er is een technische storing, u kunt uw wachtwoord niet updaten. Probeer het later nogmaals.";
-                logError('Authentication failed for user ' . $this->values['email'] . ', SQLError: ' . $e -> getMessage());
+                $this->logError('Authentication failed for user ' . $this->values['email'] . ', SQLError: ' . $e -> getMessage());
             }
             $this->valid = true;
             foreach($this->errors as $err_msg) {
