@@ -86,6 +86,9 @@ class PageModel {
             case "shop":
                 $this->title = "Florian's Rariteitenkabinet";
                 break;
+            case "cart":
+                $this->title = "Winkelmand";
+                break;
 
             default:
                 $this->title = "Oeps, daar ging iets mis...";

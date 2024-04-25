@@ -17,6 +17,10 @@ class SessionManager {
         return $this->getSessionVar('userName');
     }
 
+    public function getLoggedInUserId() {
+        return $this->getSessionVar('userId');
+    }
+
     public function doLoginUser($values) {
         if (session_status() !== PHP_SESSION_ACTIVE) {session_start();}
         $_SESSION["email"] = $values["email"];
@@ -31,7 +35,7 @@ class SessionManager {
     }
 
     public function getLoggedInEmail() {
-        return getSessionVar('email');
+        return $this->getSessionVar('email');
     }
     
     public function addToCart($id) {
@@ -43,4 +47,11 @@ class SessionManager {
         }
     }
 
+    public function getCart() {
+        return $this->getSessionVar("cart", array());
+    }
+
+    public function emptyCart() {
+        $_SESSION["cart"] = array();
+    }
 }

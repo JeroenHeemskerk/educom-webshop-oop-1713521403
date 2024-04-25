@@ -58,12 +58,16 @@ class PageController {
             case "shop":
                 require_once("models/ProductModel.php");
                 $this->model = new ProductModel($this->model);
-                $this->model->handleCartAction();
                 $this->model->getProducts();
+                $this->model->handleCartAction();
+                break;
 
             case "cart":
-            case "detail":
-            case "topK":
+                require_once("models/ProductModel.php");
+                $this->model = new ProductModel($this->model);
+                $this->model->getCartProducts();
+                $this->model->handleCartAction();
+                break;    
 
 
 
@@ -114,6 +118,11 @@ class PageController {
             case "shop":
                 include_once("views/ShopDoc.php");
                 $view = new ShopDoc($this->model);
+                break;
+
+            case "cart":
+                include_once("views/CartDoc.php");
+                $view = new CartDoc($this->model);
                 break;
 
             default:

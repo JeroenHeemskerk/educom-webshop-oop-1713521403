@@ -152,7 +152,7 @@ function getProductsByIDs($ids) {
         while($row = mysqli_fetch_assoc($result)) {
             $products[$row["id"]] = array("id"=> $row["id"], "name"=>$row["name"], "description"=>$row["description"], "price"=>$row["price"], "fname"=>$row["fname"]);
         }
-        return ["products"=>$products];
+        return $products;
     }
     finally {
         mysqli_close($conn);
@@ -181,17 +181,17 @@ function getProducts() {
 
 }
 
-function addOrder() {
+function addOrder($cart) {
     $conn = makeDataBaseConnection();
 
-    include_once('session_manager.php');
+    include_once('SessionManager.php');
+    $sessionManager = new SessionManager();
     try {
         // default of date col is current date
-        $query = "INSERT INTO orders (user_id) VALUES (" . getLoggedInUserId() . ");";
+        $query = "INSERT INTO orders (user_id) VALUES (" . $sessionManager->getLoggedInUserId() . ");";
 
         executeDataBaseQuery($query, $conn);
 
-        $cart = getCart();
         $query = "INSERT INTO orders_products (order_id, product_id, quantity) VALUES ";
         foreach($cart as $productId=>$qty) {
             $productId = mysqli_real_escape_string($conn, $productId);

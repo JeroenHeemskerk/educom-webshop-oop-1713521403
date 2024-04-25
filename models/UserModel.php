@@ -41,7 +41,7 @@ class UserModel extends PageModel {
             }
             catch (Exception $e) {
                 $this->errors["general"] = "Wij ondervinden momenteel een technische storing. Probeer later nogmaals in te loggen.";
-                $this->logError("Login failed: " . $e);
+                $this->logError("Login failed: " . $e->getMessage());
             }  
         }
     }

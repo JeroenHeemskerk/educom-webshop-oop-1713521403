@@ -4,7 +4,7 @@ class CartDoc extends ProductDoc {
     protected function showContent() {
         echo '<h2>Winkelmandje</h2>';
 
-        $products = $this->data["products"];
+        $products = $this->model->products;
         foreach($products as $product) {
             echo '<a class="cart-list" href="index.php?page=detail&detail=' . $product["id"] . '">';
             echo '<div>';
@@ -14,10 +14,10 @@ class CartDoc extends ProductDoc {
             echo '</p>';
             echo '</div></a>';
         }
-        echo '<p id="total-cart">Totaal: &euro;' . $this->data["total"] / 100 . ',-</p>';
+        echo '<p id="total-cart">Totaal: &euro;' . $this->model->cartTotal / 100 . ',-</p>';
 
         if (!empty($products)) {
-            $this->showActionButton("purchase", "cart_action", "cart", "cart", "purchaseButton", "Afrekenen");
+            $this->showActionButton("purchase", "cart", "purchaseButton", "Afrekenen");
         }
     }
 }

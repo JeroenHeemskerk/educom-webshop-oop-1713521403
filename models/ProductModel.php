@@ -1,7 +1,7 @@
 <?php
 require_once("PageModel.php");
 class ProductModel extends PageModel {
-    public $products;
+    public $products = array();
     public $cart;
     public $cartTotal;
     public $loggedIn;
@@ -29,8 +29,48 @@ class ProductModel extends PageModel {
             switch ($action) {
                 case "addToCart":
                     $this->sessionManager->addToCart($id);
+                    break;
+                case "purchase":
+                    try {
+                        include_once(__DIR__ . "/../communication.php");
+                        addOrder($this->cart);
+                        $this->sessionManager->emptyCart();
+                        $this->cart = $this->sessionManager->getCart();
+                        $this->products = array();
+                        $this->cartTotal = 0;
+                    }
+                    catch (Exception $e) {
+                        $this->errors["general"] = "Er is een technische storing, u kunt momenteel niet afrekenen. Probeer het later nogmaals.";
+                        logError('Purchase failed for ' . $this->sessionManager->getLoggedInEmail() . ', SQLError: ' . $e -> getMessage());
+                    }
             }
         }
+    }
+
+    public function getCartProducts() {
+        $this->cart = $this->sessionManager->getCart();
+
+        include_once(__DIR__ . "\..\communication.php");
+        if (!empty($this->cart)) {
+            try {
+                $cartProducts = getProductsByIDs(array_keys($this->cart));
+                
+                foreach($this->cart as $productId => $count) {
+                    // second filter on id, but looping simultaneously is too much of a hassle
+                    $cartProduct = $cartProducts[$productId];
+                    $this->products[$productId] = array("id"=>$productId, "count"=>$count, "name"=>$cartProduct['name'], "description"=>$cartProduct['description'], "fname"=>$cartProduct['fname'], "price"=>$cartProduct['price']);
+                    
+                    $subtotal = $cartProduct["price"] * $count;
+                    $this->products[$productId]["subtotal"] = $subtotal;
+                    $this->cartTotal += $subtotal;
+                }
+            }
+            catch (Exception $e) {
+                $this->errors["general"] = "Er is een technische storing. Probeer later nogmaals uw winkelmand in te zien.";
+                $this->LogError("Product load failed" . $e);
+            }    
+        }
+        
     }
 
 }
