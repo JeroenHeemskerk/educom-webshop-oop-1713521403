@@ -55,6 +55,18 @@ class PageController {
                 if ($this->model->valid) {
                     $this->model->page = "thanks";
                 }
+            case "shop":
+                require_once("models/ProductModel.php");
+                $this->model = new ProductModel($this->model);
+                $this->model->handleCartAction();
+                $this->model->getProducts();
+
+            case "cart":
+            case "detail":
+            case "topK":
+
+
+
         }
     }
 
@@ -97,6 +109,11 @@ class PageController {
             case "thanks":
                 include_once("views/ThanksDoc.php");
                 $view = new ThanksDoc($this->model);
+                break;
+
+            case "shop":
+                include_once("views/ShopDoc.php");
+                $view = new ShopDoc($this->model);
                 break;
 
             default:

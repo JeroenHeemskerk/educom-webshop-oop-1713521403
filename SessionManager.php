@@ -30,8 +30,17 @@ class SessionManager {
         session_destroy();
     }
 
-    function getLoggedInEmail() {
+    public function getLoggedInEmail() {
         return getSessionVar('email');
     }
-     
+    
+    public function addToCart($id) {
+        if (!array_key_exists($id, $_SESSION["cart"])) {
+            $_SESSION["cart"][$id] = 1;
+        }
+        else {
+            $_SESSION["cart"][$id]++;
+        }
+    }
+
 }

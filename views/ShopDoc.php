@@ -2,7 +2,7 @@
 require "ProductDoc.php";
 class ShopDoc extends ProductDoc {
     protected function showContent() {
-        $products = $this->data["products"];
+        $products = $this->model->products;
         echo '<div class="product-list">';
         foreach($products as $id=>$product) {
             echo '<div class="product">';
@@ -12,8 +12,8 @@ class ShopDoc extends ProductDoc {
             echo '<p>Prijs: &euro;' . $product["price"] / 100  . ',-</p>';
             echo '</div></a>' . PHP_EOL;
             
-            if ($this->data["loggedIn"]) {
-                $this->showActionButton("addToCart", "cart_action", "shop", "shop", "cartAddButton", "Voeg toe aan CART", $id);
+            if ($this->model->loggedIn) {
+                $this->showActionButton("addToCart", "shop", "cartAddButton", "Voeg toe aan CART", $id);
             }
             echo "</div>";
         }

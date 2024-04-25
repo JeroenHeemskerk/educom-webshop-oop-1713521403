@@ -173,7 +173,7 @@ function getProducts() {
             $products[$row["id"]] = array("id"=> $row["id"], "name"=>$row["name"], "description"=>$row["description"], "price"=>$row["price"], "fname"=>$row["fname"]);
         }
     
-        return ["products" => $products];
+        return $products;
     }
     finally {
         mysqli_close($conn);

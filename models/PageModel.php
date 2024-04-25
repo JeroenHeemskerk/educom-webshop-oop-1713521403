@@ -83,6 +83,9 @@ class PageModel {
             case "thanks":
                 $this->title = "Bedankt voor het invullen!";
                 break;
+            case "shop":
+                $this->title = "Florian's Rariteitenkabinet";
+                break;
 
             default:
                 $this->title = "Oeps, daar ging iets mis...";
@@ -92,4 +95,5 @@ class PageModel {
     protected function LogError($e) {
         echo $e;
     }
+
 }
