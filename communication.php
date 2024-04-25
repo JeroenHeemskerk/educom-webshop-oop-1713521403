@@ -178,7 +178,6 @@ function getProducts() {
     finally {
         mysqli_close($conn);
     }
-
 }
 
 function addOrder($cart) {
@@ -193,10 +192,11 @@ function addOrder($cart) {
         executeDataBaseQuery($query, $conn);
 
         $query = "INSERT INTO orders_products (order_id, product_id, quantity) VALUES ";
+        $insertId = mysqli_insert_id($conn);
         foreach($cart as $productId=>$qty) {
             $productId = mysqli_real_escape_string($conn, $productId);
             $qty = mysqli_real_escape_string($conn, $qty);
-            $query .= "('" . mysqli_insert_id($conn) . "','" . $productId . "','" . $qty . "'),";
+            $query .= "('" . $insertId . "','" . $productId . "','" . $qty . "'),";
 
         }
         // replace , with ;
