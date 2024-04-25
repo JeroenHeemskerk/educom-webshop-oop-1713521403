@@ -42,7 +42,7 @@ class ProductModel extends PageModel {
                     }
                     catch (Exception $e) {
                         $this->errors["general"] = "Er is een technische storing, u kunt momenteel niet afrekenen. Probeer het later nogmaals.";
-                        logError('Purchase failed for ' . $this->sessionManager->getLoggedInEmail() . ', SQLError: ' . $e -> getMessage());
+                        $this->logError('Purchase failed for ' . $this->sessionManager->getLoggedInEmail() . ', SQLError: ' . $e -> getMessage());
                     }
                     break;
             }
