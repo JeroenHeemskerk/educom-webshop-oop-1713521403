@@ -69,7 +69,12 @@ class PageController {
                 $this->model->handleCartAction();
                 break;    
 
-
+            case "detail":
+                require_once("models/ProductModel.php");
+                $this->model = new ProductModel($this->model);
+                $this->model->getDetailProduct();
+                $this->model->handleCartAction();
+                break;    
 
         }
     }
@@ -123,6 +128,11 @@ class PageController {
             case "cart":
                 include_once("views/CartDoc.php");
                 $view = new CartDoc($this->model);
+                break;
+
+            case "detail":
+                include_once("views/DetailDoc.php");
+                $view = new DetailDoc($this->model);
                 break;
 
             default:

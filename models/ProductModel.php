@@ -17,7 +17,7 @@ class ProductModel extends PageModel {
         }
         catch (Exception $e) {
             $this->errors["general"] = "Er is een technische storing. Probeer het later nogmaals.";
-            $this->logError("Shop load failed. MySQL err:" . $e);
+            $this->logError("Shop load failed. MySQL err:" . $e->getMessage());
         }
         $this->loggedIn = $this->sessionManager->isUserLoggedIn();
     }
@@ -43,8 +43,27 @@ class ProductModel extends PageModel {
                         $this->errors["general"] = "Er is een technische storing, u kunt momenteel niet afrekenen. Probeer het later nogmaals.";
                         logError('Purchase failed for ' . $this->sessionManager->getLoggedInEmail() . ', SQLError: ' . $e -> getMessage());
                     }
+                    break;
             }
         }
+    }
+
+    public function getDetailProduct() {
+        if ($this->isPost) {
+            $productId = $this->getPostVar("productId");
+        }
+        else {
+           $productId = $this->getGetVar("detail");
+        }
+        include_once(__DIR__ . "/../communication.php");
+        try {
+            $this->products = getProductsByIDs([$productId]);
+        }
+        catch (Exception $e) {
+            $this->errors["general"] = "Er is een technische storing. Probeer het later nogmaals.";
+            $this->logError("Shop load failed. MySQL err:" . $e->getMessage());
+        }
+        $this->loggedIn = $this->sessionManager->isUserLoggedIn();
     }
 
     public function getCartProducts() {
