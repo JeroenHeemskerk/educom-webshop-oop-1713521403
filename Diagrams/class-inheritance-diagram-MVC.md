@@ -37,8 +37,7 @@ classDiagram
     class UserModel {
         +values
         +valid
-        +userConstants
-        __construct()
+        +__construct()
         +validateLogin()
         +doLoginUser()
         +doLogoutUser()
@@ -60,13 +59,15 @@ classDiagram
         +products
         +cart
         +cartTotal
-        __construct()
-        #getProducts()
-        #getProductsByIDs()
-        #getTopKProducts()
-        #getCartProducts()
-        #addToCart()
-        #addPurchase()
+        +loggedIn
+        +k
+        +__construct()
+        +getProducts()
+        +getProductsByIDs()
+        +getTopKProducts()
+        +getCartProducts()
+        +getDetailProduct()
+        +handleCartAction()
     }
 
 ```
