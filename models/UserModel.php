@@ -174,9 +174,108 @@ class UserModel extends PageModel {
         }
     }
 
-
     public function changePassword() {
         include_once(__DIR__ . "/../communication.php");
         changePassword($this->values);
     }
+
+    public function validateContact() {
+        $this->initialiseContactVars();
+        include_once(__DIR__ . "/../constants.php");
+        if ($this->isPost) {
+            $this->validateGender();
+            $this->validateName();
+            $this->validateComm();
+            $this->validateAddress();
+
+            if (empty($this->values["msg"])) {
+                $this->errors["msg"] = "Vul alsjeblieft een bericht in.";
+            }
+
+            $this->valid = true;
+            foreach($this->errors as $err_msg) {
+                if (!empty($err_msg)) {
+                    $this->valid = false;
+                    break;
+                }
+            }
+        }
+    }
+
+    private function initialiseContactVars() {
+        $this->values["gender"] = $this->getPostVar("gender");
+        $this->values["name"] = $this->getPostVar("name");
+        $this->values["email"] = $this->getPostVar("email", NULL, FILTER_SANITIZE_EMAIL);
+        $this->values["phone"] = $this->getPostVar("phone");
+        $this->values["street"] = $this->getPostVar("street");
+        $this->values["housenumber"] = $this->getPostVar("housenumber");
+        $this->values["additive"] = $this->getPostVar("additive");
+        $this->values["postalcode"] = $this->getPostVar("postalcode");
+        $this->values["municip"] = $this->getPostVar("municip");
+        $this->values["msg"] = $this->getPostVar("msg");
+        $this->values["comm"] = $this->getPostVar("comm");
+    }
+
+    // Function to validate name
+    private function validateName() {
+        if (empty($this->values["name"])) {
+            $this->errors["name"] = "Vul alsjeblieft je volledige naam in.";
+        } else if (!preg_match('/[a-zA-Z]/', $this->values["name"])) {
+            $this->errors["name"] = "Vul alsjeblieft een naam in met minstens 1 letter.";
+        }
+    }
+
+    // Function to validate gender
+    private function validateGender() {
+        if (empty($this->values["gender"])) {
+            $this->errors["gender"] = "Vul alsjeblieft je aanhefvoorkeur in of geef aan dat je dit liever niet laat weten.";
+        } else if (!array_key_exists($this->values['gender'], GENDERS)) {
+            $this->errors["gender"] = "Selecteer alsjeblieft een van de aanhefvoorkeuren.";
+        }
+    }
+
+    // Function to validate email or phone based on communication preference
+    private function validateComm() {
+        if (empty($this->values["comm"])) {
+            $this->errors["comm"] = "Vul alsjeblieft je communicatievoorkeur in.";
+        }
+
+        if ($this->values["comm"] == "email" && !filter_var($this->values["email"], FILTER_VALIDATE_EMAIL)) {
+            $this->errors["email"] = "Vul alsjeblieft een geldig emailadres in.";
+        }
+
+        if ($this->values["comm"] == "phone" && empty($this->values["phone"])) {
+            $this->errors["phone"] = "Vul alsjeblieft een telefoonnummer in. ";
+        } else if (!empty($this->values["phone"]) && !ctype_digit($this->values["phone"])) {
+            $this->errors["phone"] = "Vul alsjeblieft een telefoonnummer in met alleen cijfers.";
+        }
+    }
+
+    // Function to validate address if communication preference is post or if any address field is empty
+    private function validateAddress() {
+        $street_flag = empty($this->values["street"]);
+        $housenumber_flag = empty($this->values["housenumber"]);
+        $postalcode_flag = empty($this->values["postalcode"]);
+        $municip_flag = empty($this->values["municip"]);
+        
+        if ($this->values["comm"] == "post" || !$street_flag || !$housenumber_flag || !$postalcode_flag  || !$municip_flag) {
+            if ($street_flag) {
+                $this->errors["street"] = "Vul alsjeblieft je straatnaam in.";
+            }
+
+            if ($housenumber_flag) {
+                $this->errors["housenumber"] = "Vul alsjeblieft je huisnummer in.";
+            }
+
+            if ($postalcode_flag) {
+                $this->errors["postalcode"] = "Vul alsjeblieft je postcode in.";
+            } else if (!preg_match('/^[0-9]{4}[A-Z]{2}$/', $this->values["postalcode"])) {
+                $this->errors["postalcode"] = "Vul alsjeblieft een geldige Nederlands postcode in."; 
+            }
+
+            if ($municip_flag) {
+                $this->errors["municip"] = "Vul alsjeblieft je gemeente in.";
+            }
+        }
+}
 }

@@ -1,11 +1,12 @@
 <?php
 require "BasicDoc.php";
+include_once(__DIR__ . "/../constants.php");
 class ThanksDoc extends BasicDoc {
     protected function showContent() {
-        $values = $this->data["values"];
+        $values = $this->model->values;
 
         echo '<p>Bedankt, ' . $values["name"] . ', voor je reactie:</p>
-        <div>Aanhef: ' . $values["gender"] . '</div>
+        <div>Aanhef: ' . GENDERS[$values["gender"]] . '</div>
         <div>Naam: ' . $values["name"] . '</div>';
         if (!empty($values["phone"])) { 
             echo '<div>Tel: ' . $values["phone"] . '</div>';
@@ -18,7 +19,7 @@ class ThanksDoc extends BasicDoc {
         if (!empty($values["street"])) { 
             echo '<div>Adres: ' . $values["street"] . ' ' . $values["housenumber"] . $values["additive"] . '</div>
             <div>Woonplaats: ' . $values["postalcode"] . ', ' . $values["municip"] . '</div>
-            <div>Communicatievoorkeur: ' . $values["comm"] . '</div>';
+            <div>Communicatievoorkeur: ' . COMM_PREFS[$values["comm"]] . '</div>';
         }
     }
 }

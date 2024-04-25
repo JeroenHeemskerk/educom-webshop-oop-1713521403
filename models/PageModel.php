@@ -77,6 +77,12 @@ class PageModel {
             case "account":
                 $this->title = "Account";
                 break;
+            case "contact":
+                $this->title = "Contact";
+                break;
+            case "thanks":
+                $this->title = "Bedankt voor het invullen!";
+                break;
 
             default:
                 $this->title = "Oeps, daar ging iets mis...";

@@ -48,6 +48,13 @@ class PageController {
                     $this->model->changePassword();
                     $this->model->page = "home";
                 }
+             case "contact":
+                require_once("models/UserModel.php");
+                $this->model = new UserModel($this->model);
+                $this->model->validateContact();
+                if ($this->model->valid) {
+                    $this->model->page = "thanks";
+                }
         }
     }
 
@@ -81,7 +88,17 @@ class PageController {
                 include_once("views/AccountDoc.php");
                 $view = new AccountDoc($this->model);
                 break;
-                
+
+            case "contact":
+                include_once("views/ContactDoc.php");
+                $view = new ContactDoc($this->model);
+                break;
+
+            case "thanks":
+                include_once("views/ThanksDoc.php");
+                $view = new ThanksDoc($this->model);
+                break;
+
             default:
                 include_once("views/Error404Doc.php");
                 $view = new Error404Doc($this->model);
