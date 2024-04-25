@@ -216,7 +216,6 @@ class UserModel extends PageModel {
         $this->values["comm"] = $this->getPostVar("comm");
     }
 
-    // Function to validate name
     private function validateName() {
         if (empty($this->values["name"])) {
             $this->errors["name"] = "Vul alsjeblieft je volledige naam in.";
@@ -225,7 +224,6 @@ class UserModel extends PageModel {
         }
     }
 
-    // Function to validate gender
     private function validateGender() {
         if (empty($this->values["gender"])) {
             $this->errors["gender"] = "Vul alsjeblieft je aanhefvoorkeur in of geef aan dat je dit liever niet laat weten.";
@@ -234,7 +232,6 @@ class UserModel extends PageModel {
         }
     }
 
-    // Function to validate email or phone based on communication preference
     private function validateComm() {
         if (empty($this->values["comm"])) {
             $this->errors["comm"] = "Vul alsjeblieft je communicatievoorkeur in.";
@@ -251,7 +248,6 @@ class UserModel extends PageModel {
         }
     }
 
-    // Function to validate address if communication preference is post or if any address field is empty
     private function validateAddress() {
         $street_flag = empty($this->values["street"]);
         $housenumber_flag = empty($this->values["housenumber"]);

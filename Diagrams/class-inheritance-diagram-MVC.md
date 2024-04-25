@@ -26,28 +26,34 @@ classDiagram
         +title
         -sessionManager
         +__construct()
-        -getPostVar()
-        -getGetVar()
+        #getPostVar()
+        #getGetVar()
         +getRequestedPage()
         +createMenu()
         +setTitle()
+        #logError()
     }
 
     class UserModel {
-        #values
-        #errors
-        #valid
+        +values
+        +valid
         +userConstants
         __construct()
-        #validateLogin()
-        #authenticateUser()
-        #doLoginUser()
-        #doLogoutUser()
-        #validateRegister()
-        #addAccount()
-        #validateChangePassword()
-        #changePassword()
-        #validateContact()
+        +validateLogin()
+        +doLoginUser()
+        +doLogoutUser()
+        +validateRegister()
+        -checkRegisterEmpty()
+        +addAccount()
+        +validateChangePassword()
+        +changePassword()
+        +validateContact()
+        -initialiseContactVars()
+        -validateAddress()
+        -validateComm()
+        -validateGender()
+        -validateName()
+        -initialiseContactVars()
     }
 
     class ProductModel {
