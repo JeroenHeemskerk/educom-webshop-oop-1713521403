@@ -29,5 +29,9 @@ class SessionManager {
         session_unset();
         session_destroy();
     }
+
+    function getLoggedInEmail() {
+        return getSessionVar('email');
+    }
      
 }

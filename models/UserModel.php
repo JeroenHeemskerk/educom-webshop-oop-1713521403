@@ -121,4 +121,62 @@ class UserModel extends PageModel {
             $this->logError('Registration failed for user ' . $this->values['email'] . ', SQLError: ' . $e -> getMessage());
         }
     }
+
+    public function validateChangePassword() {
+        if ($this->isPost) {
+            $this->values["pswd"] = $this->getPostVar("pswd");
+            $this->values["pswdNew"] =  $this->getPostVar("pswdNew");
+            $this->values["pswdNew2"] =  $this->getPostVar("pswdNew2");
+            include_once('session_manager.php');
+            $this->values["email"] = $this->sessionManager->getLoggedInEmail();
+
+            try {
+                include_once(__DIR__ . '/../communication.php');
+                $authResult = authenticateNewPswd($this->values);
+                switch ($authResult['result']) {
+                    case RESULT_EMPTY_PSWD:
+                        $this->errors["pswd"] = "Vul alsjeblieft je huidige wachtwoord in."; 
+                        break;
+    
+                    case RESULT_EMPTY_NEWPSWD:
+                        $this->errors["pswdNew"] = "Herhaal alsjeblieft je nieuwe wachtwoord tweemaal."; 
+                            break;
+               
+                    case RESULT_WRONG_PSWD:
+                        $this->errors["pswd"] = "Wachtwoord onjuist."; 
+                        break;
+    
+                    case RESULT_WRONG_NEWPSWD:
+                        $this->errors["pswdNew"] = "Wachtwoorden komen niet overeen.";
+                        break;
+    
+                    case RESULT_NO_PSWDCHANGE:
+                        $this->errors["pswdNew"] = "Vul alsjeblieft een <b>nieuw</b> wachtwoord in.";
+                        break;
+               
+                    case RESULT_OK:
+                        $this->values['userName'] = $authResult['user']['name'];
+                        $this->values['userId'] = $authResult['user']['id'];
+                        break;
+                 }
+            } 
+            catch (Exception $e) {
+                $this->errors["general"] = "Er is een technische storing, u kunt uw wachtwoord niet updaten. Probeer het later nogmaals.";
+                logError('Authentication failed for user ' . $this->values['email'] . ', SQLError: ' . $e -> getMessage());
+            }
+            $this->valid = true;
+            foreach($this->errors as $err_msg) {
+                if (!empty($err_msg)) {
+                    $this->valid = false;
+                    break;
+                }
+            }
+        }
+    }
+
+
+    public function changePassword() {
+        include_once(__DIR__ . "/../communication.php");
+        changePassword($this->values);
+    }
 }

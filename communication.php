@@ -48,7 +48,7 @@ function addAccount($credentials) {
 } 
 
 function authenticateNewPswd($values) {
-    if (empty($values["pswdOld"])) {
+    if (empty($values["pswd"])) {
         return ["result" => RESULT_EMPTY_PSWD];
     }
 
@@ -62,22 +62,23 @@ function authenticateNewPswd($values) {
 
     // caught in validateChangePswd()
     $user = getUserDataByEmail($values["email"]);
-    if (!password_verify($values["pswdOld"], $user["pswd"])) {
+    if (!password_verify($values["pswd"], $user["pswd"])) {
         return ["result" => RESULT_WRONG_PSWD];
     }
 
     if (password_verify($values["pswdNew"], $user["pswd"])) {
         return ["result" => RESULT_NO_PSWDCHANGE];
     }
+    return ["result" => RESULT_OK, "user"=>$user];
+}
 
+function changePassword($values) {
     try {
         $conn = makeDataBaseConnection();
         
-        $query = "UPDATE users SET pswd = '" . password_hash($values["pswdNew"], PASSWORD_DEFAULT, [14]) . "' WHERE id = " . $user["id"] . ";";
+        $query = "UPDATE users SET pswd = '" . password_hash($values["pswdNew"], PASSWORD_DEFAULT, [14]) . "' WHERE id = " . $values["userId"] . ";";
 
         executeDataBaseQuery($query, $conn);
-        return ['result' => RESULT_OK, 'user' => $user];
-
     }
     finally {
         mysqli_close($conn); 

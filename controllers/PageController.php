@@ -40,6 +40,14 @@ class PageController {
                     $this->model->addAccount();
                     $this->model->page = "home";
                 }
+            case "account":
+                require_once("models/UserModel.php");
+                $this->model = new UserModel($this->model);
+                $this->model->validateChangePassword();
+                if ($this->model->valid) {
+                    $this->model->changePassword();
+                    $this->model->page = "home";
+                }
         }
     }
 
@@ -69,6 +77,11 @@ class PageController {
                 $view = new RegisterDoc($this->model);
                 break;
 
+            case "account":
+                include_once("views/AccountDoc.php");
+                $view = new AccountDoc($this->model);
+                break;
+                
             default:
                 include_once("views/Error404Doc.php");
                 $view = new Error404Doc($this->model);

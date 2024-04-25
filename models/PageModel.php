@@ -74,6 +74,9 @@ class PageModel {
             case "register":
                 $this->title = "Registreren";
                 break;
+            case "account":
+                $this->title = "Account";
+                break;
 
             default:
                 $this->title = "Oeps, daar ging iets mis...";
