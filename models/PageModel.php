@@ -92,6 +92,9 @@ class PageModel {
             case "detail":
                 $this->title = "Productpagina";
                 break;
+            case "topK":
+                $this->title = "Populairse Rariteiten";
+                break;
 
             default:
                 $this->title = "Oeps, daar ging iets mis...";

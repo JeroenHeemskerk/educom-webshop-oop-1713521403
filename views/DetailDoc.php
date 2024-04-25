@@ -4,7 +4,6 @@ class DetailDoc extends ProductDoc {
     protected function showContent() {
         $id = array_keys($this->model->products)[0];
         $product = $this->model->products[$id];
-        var_dump($this->model->products);
     
         echo '<div class="detail">';
         echo '<h2>' . $product["name"] . '</h2>';

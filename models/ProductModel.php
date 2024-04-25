@@ -5,6 +5,7 @@ class ProductModel extends PageModel {
     public $cart;
     public $cartTotal;
     public $loggedIn;
+    public $k;
 
     public function __construct($pageModel) {
         PARENT::__construct($pageModel);
@@ -89,7 +90,24 @@ class ProductModel extends PageModel {
                 $this->LogError("Product load failed" . $e);
             }    
         }
-        
+    }
+
+    public function getTopKProducts() {
+        if ($this->isPost) {
+            $this->k = $this->getPostVar("k");
+        }
+        else {
+            $this->k = $this->getGetVar("top");
+        }
+        include_once(__DIR__ . "/../communication.php");
+        try {
+            $this->products = getTopKProducts($this->k);
+        }
+        catch (Exception $e) {
+            $this->errors["general"] = "Er is een technische storing. Probeer het later nogmaals.";
+            $this->logError("Shop load failed. MySQL err:" . $e->getMessage());
+        }
+        $this->loggedIn = $this->sessionManager->isUserLoggedIn();
     }
 
 }

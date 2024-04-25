@@ -74,7 +74,14 @@ class PageController {
                 $this->model = new ProductModel($this->model);
                 $this->model->getDetailProduct();
                 $this->model->handleCartAction();
-                break;    
+                break;
+            
+            case "topK":
+                require_once("models/ProductModel.php");
+                $this->model = new ProductModel($this->model);
+                $this->model->getTopKProducts();
+                $this->model->handleCartAction();
+                break;
 
         }
     }
@@ -133,6 +140,11 @@ class PageController {
             case "detail":
                 include_once("views/DetailDoc.php");
                 $view = new DetailDoc($this->model);
+                break;
+
+            case "topK":
+                include_once("views/TopKDoc.php");
+                $view = new TopKDoc($this->model);
                 break;
 
             default:
