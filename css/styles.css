@@ -167,3 +167,7 @@ textarea {
     font-family: "Open Sans", sans-serif;
     color: red;
 }
+
+#logoutUser {
+    color:black;
+}

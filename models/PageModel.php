@@ -1,5 +1,6 @@
 <?php
 require_once("SessionManager.php");
+require_once("views/MenuItem.php");
 class PageModel {
     protected $isPost = false;
     public $page;
@@ -47,16 +48,21 @@ class PageModel {
     }
 
     public function createMenu() {
-        $this->menu = array("home"=>"HOME", "about"=>"ABOUT", "contact"=>"CONTACT", "shop"=>"WEBSHOP", "topK&top=5"=>"TOP 5");
+        // $this->menu = array("home"=>"HOME", "about"=>"ABOUT", "contact"=>"CONTACT", "shop"=>"WEBSHOP", "topK&top=5"=>"TOP 5");
+        $this->menu["home"] = new MenuItem("home", "HOME");
+        $this->menu["about"] = new MenuItem("about", "ABOUT");
+        $this->menu["contact"] = new MenuItem("contact", "CONTACT");
+        $this->menu["shop"] = new MenuItem("shop", "WEBSHOP");
+        $this->menu["topK"] = new MenuItem("topK&top=5", "TOP 5");
 
         if ($this->sessionManager->isUserLoggedIn()) {
-            $this->menu["cart"] = 'CART';
-            $this->menu["account"] = "ACCOUNT";
-            $this->menu["logout"] = 'LOGOUT ' . $this->sessionManager->getLoggedInUserName();
+            $this->menu["cart"] = new MenuItem("cart", "CART");
+            $this->menu["account"] = new MenuItem("account", "ACCOUNT");
+            $this->menu["logout"] = new MenuItem("logout", "LOGOUT ",  $this->sessionManager->getLoggedInUserName());
         } 
         else {
-            $this->menu["register"] = "REGISTER";
-            $this->menu["login"] = "LOGIN";
+            $this->menu["register"] = new MenuItem("register", "REGISTER");
+            $this->menu["login"] = new MenuItem("login", "LOGIN");
         }
     }
 

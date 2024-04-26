@@ -47,8 +47,14 @@ abstract class BasicDoc extends HtmlDoc {
     private function showMenu() {
         $menu = $this->model->menu;
         echo '<ul class="navbar">';
-        foreach($menu as $page=>$label) {
-            echo '<li><a href="index.php?page=' . $page . '">' . $label . '</a></li>';
+        foreach($menu as $menuButton=>$menuItem) {
+            if ($menuButton == "logout") {
+                echo '<li><a href="index.php?page=' . $menuItem->page . '">' . $menuItem->text . ' <span id="logoutUser">' . $menuItem->text2 . '</span></a></li>';
+            }
+            else {
+                echo '<li><a href="index.php?page=' . $menuItem->page . '">' . $menuItem->text . ' <span>' . $menuItem->text2 . '</span></a></li>';
+            }
+
         }
         echo '</ul>';
     }
