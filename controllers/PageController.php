@@ -2,8 +2,10 @@
 require_once("models/PageModel.php");
 class PageController {
     private $model;
-    public function __construct() {
-        $this->model = new PageModel(NULL);
+    private $modelFactory;
+    public function __construct($modelFactory) {
+        $this->modelFactory = $modelFactory;
+        $this->model = $this->modelFactory->createModel('page');
     }
 
     public function handleRequest() {
@@ -20,7 +22,7 @@ class PageController {
         switch ($this->model->page) {
             case "login":
                 require_once("models/UserModel.php");
-                $this->model = new UserModel($this->model);
+                $this->model = $this->modelFactory->createModel("user");
                 $this->model->validateLogin();
                 if ($this->model->valid) {
                     $this->model->doLoginUser();
@@ -30,14 +32,14 @@ class PageController {
 
             case "logout":
                 require_once("models/UserModel.php");
-                $this->model = new UserModel($this->model);
+                $this->model = $this->modelFactory->createModel("user");
                 $this->model->doLogoutUser();
                 $this->model->page = "home";
                 break;
 
             case "register":
                 require_once("models/UserModel.php");
-                $this->model = new UserModel($this->model);
+                $this->model = $this->modelFactory->createModel("user");
                 $this->model->validateRegister();
                 if ($this->model->valid) {
                     $this->model->addAccount();
@@ -47,7 +49,7 @@ class PageController {
 
             case "account":
                 require_once("models/UserModel.php");
-                $this->model = new UserModel($this->model);
+                $this->model = $this->modelFactory->createModel("user");
                 $this->model->validateChangePassword();
                 if ($this->model->valid) {
                     $this->model->changePassword();
@@ -57,7 +59,7 @@ class PageController {
 
              case "contact":
                 require_once("models/UserModel.php");
-                $this->model = new UserModel($this->model);
+                $this->model = $this->modelFactory->createModel("user");
                 $this->model->validateContact();
                 if ($this->model->valid) {
                     $this->model->page = "thanks";

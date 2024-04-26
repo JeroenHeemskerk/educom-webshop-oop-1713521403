@@ -1,10 +1,13 @@
 <?php
 require_once("PageModel.php");
+require_once("UserCRUD.php");
 class UserModel extends PageModel {
     public $values = array("email"=>"", "pswd"=>"", "user"=>"");
     public $valid = false;
-    public function __construct($pageModel) {
+    public $crud;
+    public function __construct($pageModel, UserCRUD $crud) {
         PARENT::__construct($pageModel);
+        $this->crud = $crud;
     }
 
     public function validateLogin() {
@@ -13,36 +16,26 @@ class UserModel extends PageModel {
             $this->values["pswd"] =  $this->getPostVar("pswd");
 
             require_once(__DIR__ . '/../communication.php');
-            try {
-                $authResult = authenticateUser($this->values["email"], $this->values["pswd"]);
-                switch ($authResult['result']) {
-                    case RESULT_EMPTY_EMAIL:
-                        $this->errors["email"] = "Vul alsjeblieft je emailadres in.";
-                        break;
-    
-                    case RESULT_UNKNOWN_USER: 
-                        $this->errors["email"] = "Er is geen account bekend op deze website met dit emailadres."; 
-                        break;
-    
-                    case RESULT_EMPTY_PSWD:
-                        $this->errors["pswd"] = "Vul alsjeblieft je wachtwoord in."; 
-                        break;
-               
-                    case RESULT_WRONG_PSWD:
-                        $this->errors["pswd"] = "Wachtwoord onjuist."; 
-                        break; 
-               
-                    case RESULT_OK:
-                        $this->values["userName"] = $authResult["user"]["name"];
-                        $this->values["userId"] = $authResult["user"]["id"];
-                        $this->valid = true;
-                        break;
-                }
+
+            if (empty($this->values["email"])) {
+                $this->errors["email"] = "Vul alsjeblieft je emailadres in.";
             }
-            catch (Exception $e) {
-                $this->errors["general"] = "Wij ondervinden momenteel een technische storing. Probeer later nogmaals in te loggen.";
-                $this->logError("Login failed: " . $e->getMessage());
-            }  
+            else if (empty($this->values["pswd"])) {
+                $this->errors["pswd"] = "Vul alsjeblieft je wachtwoord in."; 
+            }
+
+            $user = $this->crud->readUserDataByEmail($this->values["email"]);
+            if (empty($user)) {
+                $this->errors["email"] = "Er is geen account bekend op deze website met dit emailadres."; 
+            }
+            else if (!password_verify($this->values["pswd"], $user->pswd)) { 
+                $this->errors["pswd"] = "Wachtwoord onjuist."; 
+            }
+            else {
+                $this->values["userName"] = $user->name;
+                $this->values["userId"] = $user->id;
+                $this->valid = true;
+            }
         }
     }
 
@@ -68,8 +61,7 @@ class UserModel extends PageModel {
             }
 
             try {
-                include_once(__DIR__ . '/../communication.php');
-                if (doesEmailExist($this->values["email"])) {
+                if ($this->crud->readEmailExist($this->values["email"])) {
                     $this->errors["email"] = "Dit emailadres heeft al een account op deze website.";
                 }
             }
@@ -112,9 +104,8 @@ class UserModel extends PageModel {
     }
 
     public function addAccount() {
-        include_once(__DIR__ . '/../communication.php');
         try {
-            addAccount($this->values);
+            $this->crud->createUser($this->values);
         }
         catch (Exception $e) {
             $this->errors["general"] = "Er is een technische storing, u kunt niet registreren. Probeer het later nogmaals.";
@@ -130,52 +121,36 @@ class UserModel extends PageModel {
             $this->values["email"] = $this->sessionManager->getLoggedInEmail();
 
             try {
-                include_once(__DIR__ . '/../communication.php');
-                $authResult = authenticateNewPswd($this->values);
-                switch ($authResult['result']) {
-                    case RESULT_EMPTY_PSWD:
-                        $this->errors["pswd"] = "Vul alsjeblieft je huidige wachtwoord in."; 
-                        break;
-    
-                    case RESULT_EMPTY_NEWPSWD:
-                        $this->errors["pswdNew"] = "Herhaal alsjeblieft je nieuwe wachtwoord tweemaal."; 
-                            break;
-               
-                    case RESULT_WRONG_PSWD:
-                        $this->errors["pswd"] = "Wachtwoord onjuist."; 
-                        break;
-    
-                    case RESULT_WRONG_NEWPSWD:
-                        $this->errors["pswdNew"] = "Wachtwoorden komen niet overeen.";
-                        break;
-    
-                    case RESULT_NO_PSWDCHANGE:
-                        $this->errors["pswdNew"] = "Vul alsjeblieft een <b>nieuw</b> wachtwoord in.";
-                        break;
-               
-                    case RESULT_OK:
-                        $this->values['userName'] = $authResult['user']['name'];
-                        $this->values['userId'] = $authResult['user']['id'];
-                        break;
-                 }
-            } 
+                if (empty($this->values["pswd"])) {
+                    $this->errors["pswd"] = "Vul alsjeblieft je huidige wachtwoord in.";                
+                }
+                else if (empty($this->values["pswdNew"]) || empty($this->values["pswdNew2"])) {
+                    $this->errors["pswdNew"] = "Herhaal alsjeblieft je nieuwe wachtwoord tweemaal."; 
+                }
+                else if ($this->values["pswdNew"] != $this->values["pswdNew2"]) {
+                    $this->errors["pswdNew"] = "Wachtwoorden komen niet overeen.";
+                }
+            
+                $user = $this->crud->readUserDataByEmail($this->values["email"]);
+                if (!password_verify($this->values["pswd"], $user->pswd)) {
+                    $this->errors["pswd"] = "Wachtwoord onjuist."; 
+                }
+            
+                else {
+                    $this->values['userName'] = $user->name;
+                    $this->values['userId'] = $user->id;
+                    $this->valid = true;
+                }
+            }
             catch (Exception $e) {
                 $this->errors["general"] = "Er is een technische storing, u kunt uw wachtwoord niet updaten. Probeer het later nogmaals.";
                 $this->logError('Authentication failed for user ' . $this->values['email'] . ', SQLError: ' . $e -> getMessage());
-            }
-            $this->valid = true;
-            foreach($this->errors as $err_msg) {
-                if (!empty($err_msg)) {
-                    $this->valid = false;
-                    break;
-                }
             }
         }
     }
 
     public function changePassword() {
-        include_once(__DIR__ . "/../communication.php");
-        changePassword($this->values);
+        $this->crud->updatePassword($this->values);
     }
 
     public function validateContact() {

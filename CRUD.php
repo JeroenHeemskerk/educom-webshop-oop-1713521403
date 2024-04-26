@@ -72,4 +72,21 @@ class CRUD {
             echo "Retrieval failed: " . $e->getMessage();
         }
     }
+
+    public function updateRow($sql, $params) {
+        try {
+            $stmt = $this->pdo->prepare($sql);
+
+            foreach($params as $varName=>$value) {
+                $stmt->bindValue($varName, $value);
+            }
+    
+            $stmt->execute();
+    
+            return $this->pdo->lastInsertId();
+        }
+        catch (PDOException $e) {
+            echo "Update failed: " . $e->getMessage();
+        }
+    }
 }
