@@ -6,11 +6,11 @@ class CartDoc extends ProductDoc {
 
         $products = $this->model->products;
         foreach($products as $product) {
-            echo '<a class="cart-list" href="index.php?page=detail&detail=' . $product["id"] . '">';
+            echo '<a class="cart-list" href="index.php?page=detail&detail=' . $product->id . '">';
             echo '<div>';
-            echo '<img src=Images/' . $product["fname"] . '>';
-            echo '<p>Aantal: ' . $product["count"] . '<br>';
-            echo 'Prijs: &euro;' . $product["subtotal"] / 100 . ',-<br>';
+            echo '<img src=Images/' . $product->fname . '>';
+            echo '<p>Aantal: ' . $product->count . '<br>';
+            echo 'Prijs: &euro;' . $product->subtotal / 100 . ',-<br>';
             echo '</p>';
             echo '</div></a>';
         }

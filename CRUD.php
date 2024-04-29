@@ -20,13 +20,22 @@ class CRUD {
         }
     }
 
+    private function bindParams($stmt, $params) {
+        foreach($params as $varName=>$value) {
+            if (is_int($value)) {
+                $stmt->bindValue($varName, $value, PDO::PARAM_INT);
+            }
+            else {
+                $stmt->bindValue($varName, $value);
+            }
+        }
+    }
+
     public function createRow($sql, $params) {
         try {
             $stmt = $this->pdo->prepare($sql);
 
-            foreach($params as $varName=>$value) {
-                $stmt->bindValue($varName, $value);
-            }
+            $this->bindParams($stmt, $params);
     
             $stmt->execute();
     
@@ -41,9 +50,7 @@ class CRUD {
         try {
             $stmt = $this->pdo->prepare($sql);
 
-            foreach($params as $varName=>$value) {
-                $stmt->bindValue($varName, $value);
-            }
+            $this->bindParams($stmt, $params);
 
             $stmt->execute();
             $stmt->setFetchMode(PDO::FETCH_OBJ);
@@ -59,9 +66,7 @@ class CRUD {
         try {
             $stmt = $this->pdo->prepare($sql);
 
-            foreach($params as $varName=>$value) {
-                $stmt->bindValue($varName, $value);
-            }
+            $this->bindParams($stmt, $params);
 
             $stmt->execute();
             $stmt->setFetchMode(PDO::FETCH_OBJ);
@@ -77,9 +82,7 @@ class CRUD {
         try {
             $stmt = $this->pdo->prepare($sql);
 
-            foreach($params as $varName=>$value) {
-                $stmt->bindValue($varName, $value);
-            }
+            $this->bindParams($stmt, $params);
     
             $stmt->execute();
     

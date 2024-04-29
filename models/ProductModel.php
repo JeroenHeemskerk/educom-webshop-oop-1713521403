@@ -6,15 +6,16 @@ class ProductModel extends PageModel {
     public $cartTotal;
     public $loggedIn;
     public $k;
+    public $crud;
 
-    public function __construct($pageModel) {
+    public function __construct($pageModel, ProductCRUD $crud) {
         PARENT::__construct($pageModel);
+        $this->crud = $crud;
     }
 
     public function getProducts() {
-        include_once(__DIR__ . "/../communication.php");
         try {
-            $this->products = getProducts();
+            $this->products = $this->crud->readAllProducts();
         }
         catch (Exception $e) {
             $this->errors["general"] = "Er is een technische storing. Probeer het later nogmaals.";
@@ -33,8 +34,7 @@ class ProductModel extends PageModel {
                     break;
                 case "purchase":
                     try {
-                        include_once(__DIR__ . "/../communication.php");
-                        addOrder($this->cart);
+                        $this->crud->createOrder($this->cart);
                         $this->sessionManager->emptyCart();
                         $this->cart = $this->sessionManager->getCart();
                         $this->products = array();
@@ -48,7 +48,6 @@ class ProductModel extends PageModel {
             }
         }
     }
-
     public function getDetailProduct() {
         if ($this->isPost) {
             $productId = $this->getPostVar("productId");
@@ -56,9 +55,8 @@ class ProductModel extends PageModel {
         else {
            $productId = $this->getGetVar("detail");
         }
-        include_once(__DIR__ . "/../communication.php");
         try {
-            $this->products = getProductsByIDs([$productId]);
+            $this->products = $this->crud->readProductsByIDs([$productId]);
         }
         catch (Exception $e) {
             $this->errors["general"] = "Er is een technische storing. Probeer het later nogmaals.";
@@ -70,19 +68,13 @@ class ProductModel extends PageModel {
     public function getCartProducts() {
         $this->cart = $this->sessionManager->getCart();
 
-        include_once(__DIR__ . "\..\communication.php");
         if (!empty($this->cart)) {
             try {
-                $cartProducts = getProductsByIDs(array_keys($this->cart));
-                
-                foreach($this->cart as $productId => $count) {
-                    // second filter on id, but looping simultaneously is too much of a hassle
-                    $cartProduct = $cartProducts[$productId];
-                    $this->products[$productId] = array("id"=>$productId, "count"=>$count, "name"=>$cartProduct['name'], "description"=>$cartProduct['description'], "fname"=>$cartProduct['fname'], "price"=>$cartProduct['price']);
-                    
-                    $subtotal = $cartProduct["price"] * $count;
-                    $this->products[$productId]["subtotal"] = $subtotal;
-                    $this->cartTotal += $subtotal;
+                $this->products = $this->crud->readProductsByIDs(array_keys($this->cart));
+                foreach($this->products as $cartProduct) {
+                    $cartProduct->count = $this->cart[$cartProduct->id];
+                    $cartProduct->subtotal = $cartProduct->count * $cartProduct->price;
+                    $this->cartTotal += $cartProduct->subtotal;
                 }
             }
             catch (Exception $e) {
@@ -99,9 +91,8 @@ class ProductModel extends PageModel {
         else {
             $this->k = $this->getGetVar("top");
         }
-        include_once(__DIR__ . "/../communication.php");
         try {
-            $this->products = getTopKProducts($this->k);
+            $this->products = $this->crud->readTopKProducts($this->k);
         }
         catch (Exception $e) {
             $this->errors["general"] = "Er is een technische storing. Probeer het later nogmaals.";

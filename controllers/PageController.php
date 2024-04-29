@@ -68,28 +68,28 @@ class PageController {
                 
             case "shop":
                 require_once("models/ProductModel.php");
-                $this->model = new ProductModel($this->model);
+                $this->model = $this->modelFactory->createModel("product");
                 $this->model->getProducts();
                 $this->model->handleCartAction();
                 break;
 
             case "cart":
                 require_once("models/ProductModel.php");
-                $this->model = new ProductModel($this->model);
+                $this->model = $this->modelFactory->createModel("product");
                 $this->model->getCartProducts();
                 $this->model->handleCartAction();
                 break;    
 
             case "detail":
                 require_once("models/ProductModel.php");
-                $this->model = new ProductModel($this->model);
+                $this->model = $this->modelFactory->createModel("product");
                 $this->model->getDetailProduct();
                 $this->model->handleCartAction();
                 break;
             
             case "topK":
                 require_once("models/ProductModel.php");
-                $this->model = new ProductModel($this->model);
+                $this->model = $this->modelFactory->createModel("product");
                 $this->model->getTopKProducts();
                 $this->model->handleCartAction();
                 break;
