@@ -4,7 +4,6 @@ class ProductModel extends PageModel {
     public $products = array();
     public $cart;
     public $cartTotal;
-    public $loggedIn;
     public $k;
     public $crud;
 
@@ -21,7 +20,6 @@ class ProductModel extends PageModel {
             $this->errors["general"] = "Er is een technische storing. Probeer het later nogmaals.";
             $this->logError("Shop load failed. MySQL err:" . $e->getMessage());
         }
-        $this->loggedIn = $this->sessionManager->isUserLoggedIn();
     }
 
     public function handleCartAction() {
@@ -62,7 +60,6 @@ class ProductModel extends PageModel {
             $this->errors["general"] = "Er is een technische storing. Probeer het later nogmaals.";
             $this->logError("Shop load failed. MySQL err:" . $e->getMessage());
         }
-        $this->loggedIn = $this->sessionManager->isUserLoggedIn();
     }
 
     public function getCartProducts() {
@@ -98,7 +95,6 @@ class ProductModel extends PageModel {
             $this->errors["general"] = "Er is een technische storing. Probeer het later nogmaals.";
             $this->logError("Shop load failed. MySQL err:" . $e->getMessage());
         }
-        $this->loggedIn = $this->sessionManager->isUserLoggedIn();
     }
 
 }

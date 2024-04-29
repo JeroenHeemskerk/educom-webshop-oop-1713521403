@@ -12,7 +12,7 @@ class TopKDoc extends ProductDoc {
             echo '<p>Prijs: &euro;' . $product->price / 100  . ',-</p>';
             echo '</div></a>' . PHP_EOL;
             
-            if ($this->model->loggedIn) {
+            if ($this->model->isUserLoggedIn()) {
                 $this->showActionButton("addToCart", "topK", "cartAddButton", "Voeg toe aan CART", $product->id, $this->model->k);
             }
             echo "</div>";

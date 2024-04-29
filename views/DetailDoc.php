@@ -11,7 +11,7 @@ class DetailDoc extends ProductDoc {
         echo '<h4>' . $product->name . '</h4>';
         echo '<p>' . $product->description . '<br><b>Prijs</b>: &euro;' . $product->price / 100 . '</p>';
     
-        if ($this->model->loggedIn) {
+        if ($this->model->isUserLoggedIn()) {
             $this->showActionButton("addToCart", "detail", "cartAddButton", "Voeg toe aan CART", $product->id);
         }
         echo '</div>';

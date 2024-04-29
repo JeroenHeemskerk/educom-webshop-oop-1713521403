@@ -111,4 +111,8 @@ class PageModel {
         echo $e;
     }
 
+    public function isUserLoggedIn() {
+        return $this->sessionManager->isUserLoggedIn();
+    }
+
 }
