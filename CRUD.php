@@ -16,7 +16,7 @@ class CRUD {
         }
     
         catch(PDOException $e) {
-            echo "Connection failed: $e";
+            echo "Connection failed:" .  $e->getMessage();
         }
     }
 
