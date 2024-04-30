@@ -27,6 +27,8 @@ SET time_zone = "+00:00";
 -- Tabelstructuur voor tabel `orders`
 --
 
+USE `florians_webshop`;
+
 CREATE TABLE `orders` (
   `id` int(255) NOT NULL,
   `user_id` int(11) NOT NULL,

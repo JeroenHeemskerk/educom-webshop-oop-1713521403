@@ -57,7 +57,6 @@ class ProductCRUD {
             $params[":productId" . $productId] = $productId;
             $params[":qty" . $productId] = $qty;
         }
-        var_dump($params);
         // replace trailing comma with semicolon
         $sql[-1] = ";";
         $this->crud->createRow($sql, $params);
