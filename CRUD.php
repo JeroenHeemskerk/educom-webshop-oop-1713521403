@@ -7,16 +7,16 @@ class CRUD {
         $dbname = getenv("MYSQL_FLORIAN_WEBSHOP_DATABASE"); 
         $username = getenv("MYSQL_FLORIAN_WEBSHOP_USER"); 
         $password = getenv("MYSQL_FLORIAN_WEBSHOP_PASSWORD");
-
+        $port = getenv('MYSQL_SERVER_PORT');
         try {
-            $this->pdo = new PDO("mysql:host=$servername;dbname=$dbname;port=3310", $username, $password);
+            $this->pdo = new PDO("mysql:host=$servername;dbname=$dbname;port=$port", $username, $password);
 
             // set the PDO error mode to exception
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
     
         catch(PDOException $e) {
-            echo "Connection failed: " . $e->getMessage();
+            echo "Connection failed: $e";
         }
     }
 
