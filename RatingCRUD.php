@@ -19,13 +19,13 @@ class RatingCRUD {
     }
 
     public function readAvgRating($product) {
-        $sql = "SELECT AVG(rating) FROM users_products WHERE product_id=:product;";
+        $sql = "SELECT AVG(rating) as avg_rating FROM users_products WHERE product_id=:product;";
         $params = array(":product"=>$product);
         return $this->crud->readOneRow($sql, $params);
     }
 
     public function readMultipleAvgRatings() {
         $sql = "SELECT product_id, AVG(rating) as avg_rating FROM users_products GROUP BY product_id;";
-        return $this->crud->readOneRow($sql, array());
+        return $this->crud->readMultipleRows($sql, array());
     }
 }

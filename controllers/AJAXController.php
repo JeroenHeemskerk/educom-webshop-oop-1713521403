@@ -3,10 +3,16 @@ class AJAXController {
     public $model;
     public $crudFactory;
     private $crud;
+    private $response;
 
-    public function __construct(PageModel $model, CRUDFactory $crudFactory) {
+    public function __construct(PageModel $model, ModelFactory $modelFactory) {
         $this->model = $model;
-        $this->crudFactory = $crudFactory;
+        $this->crudFactory = $modelFactory->crudFactory;
+    }
+
+    public function handleRequest() {
+        $this->processRequest();
+        $this->showResponse();
     }
 
     public function processRequest() {
@@ -16,7 +22,8 @@ class AJAXController {
                 $this->crudFactory->createCrud("rating");
                 $this->crud = $this->crudFactory->crud;
                 $productId = $this->model->getGetVar("id");
-                $this->crud->readAvgRating($productId);
+                $this->response = $this->crud->readAvgRating($productId);
+                $this->response->id = $productId;
                 break;
             case "updateRating":
                 $this->crudFactory->createCrud("rating");
@@ -24,7 +31,7 @@ class AJAXController {
                 $productId = $this->model->getGetVar("id");
                 $rating = $this->model->getGetVar("rating");
                 $userId = $this->model->sessionManager->getLoggedInUserId();
-                $this->crud->updateRating($userId, $productId, $rating);
+                $this->response = $this->crud->updateRating($userId, $productId, $rating);
                 break;
             case "makeRating":
                 $this->crudFactory->createCrud("rating");
@@ -32,14 +39,18 @@ class AJAXController {
                 $productId = $this->model->getGetVar("id");
                 $rating = $this->model->getGetVar("rating");
                 $userId = $this->model->sessionManager->getLoggedInUserId();
-                $this->crud->createRating($userId, $productId, $rating);
+                $this->response = $this->crud->createRating($userId, $productId, $rating);
                 break;
             case "getAvgRatings":
                 $this->crudFactory->createCrud("rating");
                 $this->crud = $this->crudFactory->crud;
-                $this->crud->readMultipleAvgRatings();
+                $this->response = $this->crud->readMultipleAvgRatings();
                 break;
 
         }
+    }
+
+    public function showResponse() {
+        echo json_encode($this->response);
     }
 }

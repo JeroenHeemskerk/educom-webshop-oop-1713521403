@@ -1,5 +1,6 @@
 <?php
 require_once("models/PageModel.php");
+require_once("AJAXController.php");
 class PageController {
     private $model;
     private $modelFactory;
@@ -21,7 +22,7 @@ class PageController {
     private function processRequest() {
         if ($this->model->action=="ajax") {
             $ajax = new AJAXController($this->model, $this->modelFactory);
-            $ajax->processRequest();
+            $ajax->handleRequest();
             exit;
         }
 
