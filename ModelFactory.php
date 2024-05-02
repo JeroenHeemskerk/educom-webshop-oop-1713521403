@@ -17,6 +17,7 @@ class ModelFactory {
         }
         else if ($name == "product") {
             $this->crudFactory->createCrud($name);
+            // Intelephense klaagt hierover. Blijkbaar is t mogelijk dat \/ dit een CRUD object is ipv UserCRUD?
             return new ProductModel($this->pageModel, $this->crudFactory->crud);
         }
     }

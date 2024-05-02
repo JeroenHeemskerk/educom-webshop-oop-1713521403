@@ -10,4 +10,4 @@ $crud = new CRUD();
 $crudFactory = new CRUDFactory($crud);
 $modelFactory = new ModelFactory($crudFactory);
 $controller = new PageController($modelFactory);
-$controller->handleRequest();    
+$controller->handleRequest();

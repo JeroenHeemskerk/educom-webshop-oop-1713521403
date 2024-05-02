@@ -19,10 +19,11 @@ class PageController {
     }
 
     private function processRequest() {
-        // if ($this->model->action=="ajax") {
-        //     $ajax = new AJAXController($this->model);
-        //     $ajax->processRequest();
-        // }
+        if ($this->model->action=="ajax") {
+            $ajax = new AJAXController($this->model, $this->modelFactory);
+            $ajax->processRequest();
+            exit;
+        }
 
         switch ($this->model->page) {
             case "login":

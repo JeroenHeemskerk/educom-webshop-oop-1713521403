@@ -2,6 +2,7 @@
 include_once("CRUD.php");
 include_once("UserCRUD.php");
 include_once("ProductCRUD.php");
+include_once("RatingCRUD.php");
 class CRUDFactory {
     public $crud;
 
@@ -15,6 +16,9 @@ class CRUDFactory {
         }
         else if ($name == "product") {
             $this->crud = new ProductCRUD($this->crud);
+        }
+        else if ($name == "rating") {
+            $this->crud = new RatingCRUD($this->crud);
         }
     }
 }
