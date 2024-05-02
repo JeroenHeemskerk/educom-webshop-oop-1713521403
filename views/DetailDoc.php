@@ -26,26 +26,62 @@ class DetailDoc extends ProductDoc {
     }
 
     protected function showScripts() {
+        echo '<script language="JavaScript" type="text/javascript" src="/../jquery-3.7.1.min.js"></script>';
         $product = $this->model->products[0];
         echo '<script>
         $(document).ready(function() {
-            function changeStars(number) {
-                for (var i = 1; i <= number; i++) {
-                    $("#star-" + i).html("&starf;");
-                }
-                $.get("index.php?action=ajax&function=updateRating&rating=number&id=' . $product->id .')
-            }
+            $.get("index.php?action=ajax&function=getAvgRating&id=' . $product->id .'", function(json) {
+                const data = JSON.parse(json)
+                var avgRating = Math.round(data.avg_rating*2)/2
+                showStars(avgRating)
+                
+            })
+            .fail(function() {
+                // Error callback function
+                console.error("Error occurred while sending the request.")
+            })
 
+            function showStars(avgRating) {
+                for (var i = 1; i <= 5; i++) {
+                    const diff = avgRating - i
+                    if (diff == 0.5) {
+                        $("#star-" + i).addClass("fa").html("&#xf123;")
+                    } else if (diff == 0 || diff >= 1) {
+                        $("#star-" + i).addClass("fa").html("&#xf005;")
+                    } else {
+                        $("#star-" + i).addClass("fa").html("&#xf006;")
+                    }
+                }
+            }
+                    
+            function changeStars(number) {
+                $.get("index.php?action=ajax&function=updateRating&rating=" + number + "&id=' . $product->id .'", function(json) {})
+                .fail(function() {
+                    // Error callback function
+                    console.error("Error occurred while sending the request.")
+                })
+                $.get("index.php?action=ajax&function=getAvgRating&id=' . $product->id .'", function(json) {
+                    const data = JSON.parse(json)
+                    var avgRating = Math.round(data.avg_rating*2)/2
+                    showStars(avgRating)
+                    
+                })
+                .fail(function() {
+                    // Error callback function
+                    console.error("Error occurred while sending the request.")
+                })
+            }
+        
             for (var i = 1; i <= 5; i++) {
                 (function(index) {
                     $("#star-" + index).click(function() {
-                        changeStars(index);
-                    });
-                })(i);
+                        changeStars(index)
+                    })
+                })(i)
             }
-  
         })
-      </script>';
+        
+        </script>';
     }
 
     protected function showStyleLinks() {

@@ -15,8 +15,6 @@ class UserModel extends PageModel {
             $this->values["email"] =  $this->getPostVar("email", FILTER_SANITIZE_EMAIL);
             $this->values["pswd"] =  $this->getPostVar("pswd");
 
-            require_once(__DIR__ . '/../communication.php');
-
             if (empty($this->values["email"])) {
                 $this->errors["email"] = "Vul alsjeblieft je emailadres in.";
             }

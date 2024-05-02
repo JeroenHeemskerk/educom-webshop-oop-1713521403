@@ -23,6 +23,7 @@ class PageController {
         if ($this->model->action=="ajax") {
             $ajax = new AJAXController($this->model, $this->modelFactory);
             $ajax->handleRequest();
+            // is dit gebruikelijk?
             exit;
         }
 

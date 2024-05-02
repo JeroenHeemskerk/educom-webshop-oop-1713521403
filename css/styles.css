@@ -123,7 +123,7 @@ textarea {
 .detail p {
     font-family: "Open Sans", sans-serif;
     margin-top: 4px;
-    margin-bottom: -8px;
+    margin-bottom: 0px;
 }
 
 .detail h4 {
@@ -175,7 +175,7 @@ textarea {
 }
 
 .ratingStars span {
-    font-size: 40px;
+    font-size: 30px;
     color: orange;
     cursor: pointer;
 }

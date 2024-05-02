@@ -14,7 +14,7 @@ class RatingCRUD {
 
     public function updateRating($userId, $productId, $rating) {
         $sql = "UPDATE users_products SET rating=:rating WHERE product_id=:product AND user_id=:user;";
-        $params = array(":user"=>$userId, ":product_id"=>$productId, ":rating"=>$rating);
+        $params = array(":user"=>$userId, ":product"=>$productId, ":rating"=>$rating);
         $this->crud->updateRow($sql, $params);
     }
 
