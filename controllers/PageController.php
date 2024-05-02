@@ -19,6 +19,11 @@ class PageController {
     }
 
     private function processRequest() {
+        // if ($this->model->action=="ajax") {
+        //     $ajax = new AJAXController($this->model);
+        //     $ajax->processRequest();
+        // }
+
         switch ($this->model->page) {
             case "login":
                 require_once("models/UserModel.php");

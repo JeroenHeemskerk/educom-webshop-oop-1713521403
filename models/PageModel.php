@@ -7,7 +7,8 @@ class PageModel {
     public $menu;
     public $title;
     public $errors = array();
-    protected $sessionManager;
+    public $sessionManager;
+    public $action;
 
     public function __construct($copy) {
         if (empty($copy)) {
@@ -31,7 +32,7 @@ class PageModel {
         return isset($value) ? trim($value) : $default;   
     }
 
-    protected function getGetVar($key, $default="") {  
+    public function getGetVar($key, $default="") {  
         $value = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);  
          
         return isset($value) ? trim($value) : $default;
@@ -44,11 +45,11 @@ class PageModel {
         }
         else {
             $this->page = $this->getGetVar("page");
+            $this->action = $this->getGetVar("action");
         }
     }
 
     public function createMenu() {
-        // $this->menu = array("home"=>"HOME", "about"=>"ABOUT", "contact"=>"CONTACT", "shop"=>"WEBSHOP", "topK&top=5"=>"TOP 5");
         $this->menu["home"] = new MenuItem("home", "HOME");
         $this->menu["about"] = new MenuItem("about", "ABOUT");
         $this->menu["contact"] = new MenuItem("contact", "CONTACT");

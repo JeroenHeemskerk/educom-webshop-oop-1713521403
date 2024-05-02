@@ -123,6 +123,7 @@ textarea {
 .detail p {
     font-family: "Open Sans", sans-serif;
     margin-top: 4px;
+    margin-bottom: -8px;
 }
 
 .detail h4 {
@@ -136,6 +137,7 @@ textarea {
     background-color: #D57A6A;
     color: white;
     font-size: 20px;
+    cursor: pointer;
 }
 
 .detail-info {
@@ -170,4 +172,18 @@ textarea {
 
 #logoutUser {
     color:black;
+}
+
+.ratingStars span {
+    font-size: 40px;
+    color: orange;
+    cursor: pointer;
+}
+
+.ratingStars {
+    margin-bottom: 10px;
+}
+
+.ratingStars p {
+    margin-bottom: 0px;
 }

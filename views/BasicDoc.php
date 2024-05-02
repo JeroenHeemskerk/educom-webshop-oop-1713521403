@@ -12,6 +12,7 @@ abstract class BasicDoc extends HtmlDoc {
         $this->showTitle();
         $this->showFavIcon();
         $this->showStyleLinks();
+        $this->showScripts();
     }
 
     private function showFavIcon() {
@@ -30,6 +31,42 @@ abstract class BasicDoc extends HtmlDoc {
         echo "<title>";
         echo $this->model->title;
         echo "</title>";
+    }
+
+    private function showScripts() {
+        echo '<script language="JavaScript" type="text/javascript" src="/../jquery-3.7.1.min.js"></script>';
+        echo '<script>
+        $(document).ready(function() {
+            function changeStars(number) {
+                for (var i = 1; i <= number; i++) {
+                    $("#star-" + i).html("&starf;");
+                }
+            }
+
+            $
+
+            $("#star-1").click(function(){
+                changeStars(1)
+            })
+
+            $("#star-2").click(function(){
+                changeStars(2)
+            })
+
+            $("#star-3").click(function(){
+                changeStars(3)
+            })
+
+            $("#star-4").click(function(){
+                changeStars(4)
+            })
+
+            $("#star-5").click(function(){
+                changeStars(5)
+            })
+  
+        })
+      </script>';
     }
 
     protected function showBodyContent() {
