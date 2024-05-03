@@ -6,14 +6,8 @@ class RatingCRUD {
         $this->crud = $crud;
     }
 
-    public function createRating($userId, $productId, $rating) {
-        $sql = "INSERT INTO users_products (user_id, product_id, rating) VALUES (:user, :product, :rating);";
-        $params = array(":user"=>$userId, ":product_id"=>$productId, ":rating"=>$rating);
-        $this->crud->createRow($sql, $params);
-    }
-
     public function updateRating($userId, $productId, $rating) {
-        $sql = "UPDATE users_products SET rating=:rating WHERE product_id=:product AND user_id=:user;";
+        $sql = "INSERT INTO users_products (product_id, user_id, rating) VALUES (:product, :user, :rating) ON DUPLICATE KEY UPDATE rating = VALUES(rating);";
         $params = array(":user"=>$userId, ":product"=>$productId, ":rating"=>$rating);
         $this->crud->updateRow($sql, $params);
     }

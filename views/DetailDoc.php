@@ -31,10 +31,9 @@ class DetailDoc extends ProductDoc {
         echo '<script>
         $(document).ready(function() {
             $.get("index.php?action=ajax&function=getAvgRating&id=' . $product->id .'", function(json) {
-                const data = JSON.parse(json)
+                var data = JSON.parse(json)
                 var avgRating = Math.round(data.avg_rating*2)/2
                 showStars(avgRating)
-                
             })
             .fail(function() {
                 // Error callback function
@@ -44,24 +43,29 @@ class DetailDoc extends ProductDoc {
             function showStars(avgRating) {
                 for (var i = 1; i <= 5; i++) {
                     const diff = avgRating - i
+                    // half a star
                     if (diff == 0.5) {
                         $("#star-" + i).addClass("fa").html("&#xf123;")
-                    } else if (diff == 0 || diff >= 1) {
+                    } 
+                    // full star
+                    else if (diff == 0 || diff >= 1) {
                         $("#star-" + i).addClass("fa").html("&#xf005;")
-                    } else {
+                    }
+                    // empty star 
+                    else {
                         $("#star-" + i).addClass("fa").html("&#xf006;")
                     }
                 }
             }
                     
             function changeStars(number) {
-                $.get("index.php?action=ajax&function=updateRating&rating=" + number + "&id=' . $product->id .'", function(json) {})
+                $.get("index.php?action=ajax&function=updateRating&rating=" + number + "&id=' . $product->id .'", function(json) {console.log(json)})
                 .fail(function() {
                     // Error callback function
                     console.error("Error occurred while sending the request.")
                 })
                 $.get("index.php?action=ajax&function=getAvgRating&id=' . $product->id .'", function(json) {
-                    const data = JSON.parse(json)
+                    var data = JSON.parse(json)
                     var avgRating = Math.round(data.avg_rating*2)/2
                     showStars(avgRating)
                     
