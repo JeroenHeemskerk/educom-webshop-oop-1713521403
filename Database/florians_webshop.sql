@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 25 apr 2024 om 17:06
+-- Gegenereerd op: 03 mei 2024 om 12:06
 -- Serverversie: 10.4.32-MariaDB
 -- PHP-versie: 8.2.12
 
@@ -26,8 +26,6 @@ SET time_zone = "+00:00";
 --
 -- Tabelstructuur voor tabel `orders`
 --
-
-USE `florians_webshop`;
 
 CREATE TABLE `orders` (
   `id` int(255) NOT NULL,
@@ -67,7 +65,8 @@ INSERT INTO `orders` (`id`, `user_id`, `order_date`) VALUES
 (31, 8, '2024-04-25'),
 (32, 8, '2024-04-25'),
 (33, 8, '2024-04-25'),
-(34, 8, '2024-04-25');
+(34, 8, '2024-04-25'),
+(35, 18, '2024-04-29');
 
 -- --------------------------------------------------------
 
@@ -128,7 +127,10 @@ INSERT INTO `orders_products` (`id`, `order_id`, `product_id`, `quantity`) VALUE
 (48, 33, 4, 2),
 (49, 33, 2, 2),
 (50, 34, 2, 1),
-(51, 34, 1, 1);
+(51, 34, 1, 1),
+(52, 35, 2, 1),
+(53, 35, 4, 3),
+(54, 35, 1, 2);
 
 -- --------------------------------------------------------
 
@@ -179,7 +181,37 @@ INSERT INTO `users` (`id`, `name`, `email`, `pswd`) VALUES
 (9, 'no', 'no@no.nl', '$2y$10$ltnKwN5HAQAkC635c0XJuu8n/RIB6K3VlOyvejFW9teR78xQPls2C'),
 (10, 'of', 'of@of.nl', '$2y$10$Ne02QZzsnGTtcwINpucW/ey0jJk1GUnpgIx7.zGWISdfz5y1rBWoC'),
 (11, 'fo', 'fo@fo.nl', '$2y$10$An8x7hjWSmpCOIkDOBkLH.x7vzpq/2zdyo8vviATS4w5Mem6IZivm'),
-(12, 'neenee', 'neenee@neenee.nl', '$2y$10$4lxOomKgN/4pu6JRTEFPPeFzUPdGrAtOaPIFEv8Vg8FbZQaErQDJu');
+(12, 'neenee', 'neenee@neenee.nl', '$2y$10$4lxOomKgN/4pu6JRTEFPPeFzUPdGrAtOaPIFEv8Vg8FbZQaErQDJu'),
+(13, 'yes', 'yes@yes.nl', '$2y$10$g.1tIxR1G0tgPnEMfkV5aOzCmW1Q4Pq.k4WCxkmeV1oaWQL0dXWDa'),
+(18, 'sey', 'sey@sey.nl', '$2y$10$DhJeA3HXFzhbGNn1NY112ODeIOFhuPJNM.aEtVEOtk9hE5ULc30t2');
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `users_products`
+--
+
+CREATE TABLE `users_products` (
+  `id` int(255) NOT NULL,
+  `product_id` int(255) NOT NULL,
+  `user_id` int(255) NOT NULL,
+  `rating` int(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `users_products`
+--
+
+INSERT INTO `users_products` (`id`, `product_id`, `user_id`, `rating`) VALUES
+(1, 5, 18, 5),
+(2, 5, 10, 2),
+(3, 6, 18, 2),
+(4, 6, 7, 3),
+(6, 1, 12, 5),
+(8, 5, 13, 3),
+(14, 1, 13, 3),
+(15, 4, 13, 3),
+(16, 2, 13, 2);
 
 --
 -- Indexen voor geëxporteerde tabellen
@@ -213,6 +245,14 @@ ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexen voor tabel `users_products`
+--
+ALTER TABLE `users_products`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `product_id` (`product_id`,`user_id`),
+  ADD KEY `user_rates_products` (`user_id`);
+
+--
 -- AUTO_INCREMENT voor geëxporteerde tabellen
 --
 
@@ -220,13 +260,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT voor een tabel `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT voor een tabel `orders_products`
 --
 ALTER TABLE `orders_products`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- AUTO_INCREMENT voor een tabel `products`
@@ -238,7 +278,13 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT voor een tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT voor een tabel `users_products`
+--
+ALTER TABLE `users_products`
+  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- Beperkingen voor geëxporteerde tabellen
@@ -256,6 +302,13 @@ ALTER TABLE `orders`
 ALTER TABLE `orders_products`
   ADD CONSTRAINT `order_has_products` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
   ADD CONSTRAINT `product_has_orders` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
+
+--
+-- Beperkingen voor tabel `users_products`
+--
+ALTER TABLE `users_products`
+  ADD CONSTRAINT `product_has_userratings` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
+  ADD CONSTRAINT `user_rates_products` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
