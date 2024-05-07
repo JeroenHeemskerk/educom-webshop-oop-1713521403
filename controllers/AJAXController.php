@@ -22,16 +22,29 @@ class AJAXController {
                 $this->crudFactory->createCrud("rating");
                 $this->crud = $this->crudFactory->crud;
                 $productId = $this->model->getGetVar("id");
-                $this->response = $this->crud->readAvgRating($productId);
-                $this->response->id = $productId;
-                break;
+                try {
+                    $this->response = $this->crud->readAvgRating($productId);
+                    $this->response->id = $productId;
+                    break;
+                }
+                catch (Exception $e) {
+                    $this->model->errors["general"] = "Er is een technische storing. U kunt momenteel geen rating geven. Probeer het later nogmaals.";
+                    $this->model->LogError("Rating failed. MySQL error: ". $e);
+                }
+
             case "updateRating":
                 $this->crudFactory->createCrud("rating");
                 $this->crud = $this->crudFactory->crud;
                 $productId = $this->model->getGetVar("id");
                 $rating = $this->model->getGetVar("rating");
                 $userId = $this->model->sessionManager->getLoggedInUserId();
-                $this->response = $this->crud->updateRating($userId, $productId, $rating);
+                try {
+                    $this->response = $this->crud->updateRating($userId, $productId, $rating);
+                }
+                catch (Exception $e) {
+                    $this->model->errors["general"] = "Er is een technische storing. U kunt momenteel geen rating geven. Probeer het later nogmaals.";
+                    $this->model->LogError("Rating failed. MySQL error: ". $e);
+                }
                 break;
             case "makeRating":
                 $this->crudFactory->createCrud("rating");
@@ -39,12 +52,25 @@ class AJAXController {
                 $productId = $this->model->getGetVar("id");
                 $rating = $this->model->getGetVar("rating");
                 $userId = $this->model->sessionManager->getLoggedInUserId();
-                $this->response = $this->crud->createRating($userId, $productId, $rating);
+
+                try {
+                    $this->response = $this->crud->createRating($userId, $productId, $rating);
+                }
+                catch (Exception $e) {
+                    $this->model->errors["general"] = "Er is een technische storing. U kunt momenteel geen rating geven. Probeer het later nogmaals.";
+                    $this->model->LogError("Rating failed. MySQL error: ". $e);
+                }
                 break;
             case "getAvgRatings":
                 $this->crudFactory->createCrud("rating");
                 $this->crud = $this->crudFactory->crud;
-                $this->response = $this->crud->readMultipleAvgRatings();
+                try {
+                    $this->response = $this->crud->readMultipleAvgRatings();
+                }
+                catch (Exception $e) {
+                    $this->model->errors["general"] = "Er is een technische storing. U kunt momenteel geen rating geven. Probeer het later nogmaals.";
+                    $this->model->LogError("Rating failed. MySQL error: ". $e);
+                }
                 break;
 
         }

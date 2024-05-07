@@ -8,16 +8,10 @@ class CRUD {
         $username = getenv("MYSQL_FLORIAN_WEBSHOP_USER"); 
         $password = getenv("MYSQL_FLORIAN_WEBSHOP_PASSWORD");
         $port = getenv('MYSQL_SERVER_PORT');
-        try {
-            $this->pdo = new PDO("mysql:host=$servername;dbname=$dbname;port=$port", $username, $password);
+        $this->pdo = new PDO("mysql:host=$servername;dbname=$dbname;port=$port", $username, $password);
 
-            // set the PDO error mode to exception
-            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        }
-    
-        catch(PDOException $e) {
-            echo "Connection failed:" .  $e->getMessage();
-        }
+        // set the PDO error mode to exception
+        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
     private function bindParams($stmt, $params) {
@@ -32,64 +26,44 @@ class CRUD {
     }
 
     public function createRow($sql, $params) {
-        try {
-            $stmt = $this->pdo->prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
 
-            $this->bindParams($stmt, $params);
-    
-            $stmt->execute();
-    
-            return $this->pdo->lastInsertId();
-        }
-        catch (PDOException $e) {
-            echo "Insertion failed: " . $e->getMessage();
-        }
+        $this->bindParams($stmt, $params);
+
+        $stmt->execute();
+
+        return $this->pdo->lastInsertId();
     }
 
     public function readOneRow($sql, $params) {
-        try {
-            $stmt = $this->pdo->prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
 
-            $this->bindParams($stmt, $params);
+        $this->bindParams($stmt, $params);
 
-            $stmt->execute();
-            $stmt->setFetchMode(PDO::FETCH_OBJ);
-            $row = $stmt->fetch();
-            return $row;
-        }
-        catch (PDOException $e) {
-            echo "Retrieval failed: " . $e->getMessage();
-        }
+        $stmt->execute();
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
+        $row = $stmt->fetch();
+        return $row;
     }
 
     public function readMultipleRows($sql, $params) {
-        try {
-            $stmt = $this->pdo->prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
 
-            $this->bindParams($stmt, $params);
+        $this->bindParams($stmt, $params);
 
-            $stmt->execute();
-            $stmt->setFetchMode(PDO::FETCH_OBJ);
-            $rows = $stmt->fetchAll();
-            return $rows;
-        }
-        catch (PDOException $e) {
-            echo "Retrieval failed: " . $e->getMessage();
-        }
+        $stmt->execute();
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
+        $rows = $stmt->fetchAll();
+        return $rows;
     }
 
     public function updateRow($sql, $params) {
-        try {
-            $stmt = $this->pdo->prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
 
-            $this->bindParams($stmt, $params);
-    
-            $stmt->execute();
-    
-            return $this->pdo->lastInsertId();
-        }
-        catch (PDOException $e) {
-            echo "Update failed: " . $e->getMessage();
-        }
+        $this->bindParams($stmt, $params);
+
+        $stmt->execute();
+
+        return $this->pdo->lastInsertId();
     }
 }

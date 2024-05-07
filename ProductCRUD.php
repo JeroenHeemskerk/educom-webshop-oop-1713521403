@@ -30,7 +30,7 @@ class ProductCRUD {
         $sql = "SELECT p.*, SUM(op.quantity) as total_sold FROM orders_products as op
         RIGHT JOIN products as p ON op.product_id = p.id
         LEFT JOIN orders as o ON op.order_id = o.id
-        WHERE o.order_date > DATE_SUB(date(CURRENT_DATE), INTERVAL 7 DAY) or o.order_date IS NULL
+        WHERE o.order_date > DATE_SUB(date(CURRENT_DATE), INTERVAL 7 DAY) OR o.order_date IS NULL
         GROUP BY p.id
         ORDER BY total_sold DESC
         LIMIT :K;";

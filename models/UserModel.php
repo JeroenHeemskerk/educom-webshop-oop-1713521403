@@ -22,18 +22,25 @@ class UserModel extends PageModel {
                 $this->errors["pswd"] = "Vul alsjeblieft je wachtwoord in."; 
             }
 
-            $user = $this->crud->readUserDataByEmail($this->values["email"]);
-            if (empty($user)) {
-                $this->errors["email"] = "Er is geen account bekend op deze website met dit emailadres."; 
+            try {
+                $user = $this->crud->readUserDataByEmail($this->values["email"]);
+                if (empty($user)) {
+                    $this->errors["email"] = "Er is geen account bekend op deze website met dit emailadres."; 
+                }
+                else if (!password_verify($this->values["pswd"], $user->pswd)) { 
+                    $this->errors["pswd"] = "Wachtwoord onjuist."; 
+                }
+                else {
+                    $this->values["userName"] = $user->name;
+                    $this->values["userId"] = $user->id;
+                    $this->valid = true;
+                }
             }
-            else if (!password_verify($this->values["pswd"], $user->pswd)) { 
-                $this->errors["pswd"] = "Wachtwoord onjuist."; 
+            catch (Exception $e) {
+                $this->errors["general"] = "Er is een technische storing. U kunt momenteel niet inloggen. Probeer het later nogmaals.";
+                $this->logError('Validation failed for user ' . $this->values['email'] . ', SQLError: ' . $e -> getMessage());
             }
-            else {
-                $this->values["userName"] = $user->name;
-                $this->values["userId"] = $user->id;
-                $this->valid = true;
-            }
+            
         }
     }
 
@@ -148,7 +155,13 @@ class UserModel extends PageModel {
     }
 
     public function changePassword() {
-        $this->crud->updatePassword($this->values);
+        try {
+            $this->crud->updatePassword($this->values);
+        }
+        catch (Exception $e) {
+            $this->errors["general"] = "Er is een technische storing, u kunt uw wachtwoord niet updaten. Probeer het later nogmaals.";
+            $this->logError('Update failed for user ' . $this->values['email'] . ', SQLError: ' . $e -> getMessage());
+        }
     }
 
     public function validateContact() {
@@ -245,5 +258,5 @@ class UserModel extends PageModel {
                 $this->errors["municip"] = "Vul alsjeblieft je gemeente in.";
             }
         }
-}
+    }
 }
