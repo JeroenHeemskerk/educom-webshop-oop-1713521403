@@ -4,7 +4,7 @@ include_once("UserCRUD.php");
 include_once("ProductCRUD.php");
 include_once("RatingCRUD.php");
 class CRUDFactory {
-    public $crud;
+    public CRUD|UserCRUD|ProductCRUD|RatingCRUD $crud;
 
     public function __construct(CRUD $crud) {
         $this->crud = $crud;
